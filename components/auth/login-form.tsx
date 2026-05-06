@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { Chrome, Facebook, Loader2 } from 'lucide-react'
+import { FcGoogle } from "react-icons/fc";
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -36,19 +37,19 @@ export function LoginForm() {
             <Loader2 className="h-5 w-5 animate-spin" />
           ) : (
             <>
-              <Chrome className="h-5 w-5" />
+              <FcGoogle className="h-5 w-5" />
               {t('auth.continueWithGoogle')}
             </>
           )}
         </Button>
 
-        <Button type="button" variant="outline" size="lg" className="h-12 w-full gap-3" disabled>
+        {/* <Button type="button" variant="outline" size="lg" className="h-12 w-full gap-3" disabled>
           <Facebook className="h-5 w-5 opacity-70" />
           {t('auth.facebookSoon')}
           <Badge variant="secondary" className="ms-auto font-normal">
             {t('layout.comingSoon')}
           </Badge>
-        </Button>
+        </Button> */}
       </CardContent>
     </Card>
   )
