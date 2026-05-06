@@ -21,7 +21,7 @@ const notoArabic = Noto_Sans_Arabic({
 })
 
 export const metadata: Metadata = {
-  title: 'RimInvoice - Invoice Management for Mauritania',
+  title: 'Fatourati - Invoice Management for Mauritania',
   description: 'Create and manage professional invoices with support for local payment methods like Bankily, Seddad, Masrvi, and BimBank.',
   keywords: ['invoice', 'Mauritania', 'Bankily', 'Seddad', 'billing', 'فاتورة', 'موريتانيا'],
   authors: [{ name: 'Iyehah Hacen' }],
@@ -64,7 +64,7 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        {/* {process.env.NODE_ENV === 'production' && <Analytics />} */}
       </body>
     </html>
   )

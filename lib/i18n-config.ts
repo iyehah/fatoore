@@ -1,5 +1,5 @@
 /** UI languages with full locale files */
-export const ACTIVE_LANGUAGE_CODES = ['ar', 'fr', 'en', 'es', 'pt', 'de'] as const
+export const ACTIVE_LANGUAGE_CODES = ['ar', 'fr', 'en'] as const
 export type ActiveLanguage = (typeof ACTIVE_LANGUAGE_CODES)[number]
 
 export function isActiveLanguage(code: string): code is ActiveLanguage {

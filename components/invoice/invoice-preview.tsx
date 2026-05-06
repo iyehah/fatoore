@@ -5,6 +5,8 @@ import { useLanguage } from '@/hooks/use-language'
 import { formatCurrency, formatDate } from '@/lib/invoice-utils'
 import paymentMethodsConfig from '@/config/payment-methods.json'
 import type { Invoice } from '@/types/invoice'
+import Link from 'next/link'
+import Logo from '../logo'
 
 interface InvoicePreviewProps {
   invoice: Partial<Invoice>
@@ -43,6 +45,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                 width={80}
                 height={80}
                 className="mb-2 h-20 w-20 object-contain"
+                draggable={false}
               />
             ) : (
               <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center mb-2">
@@ -166,6 +169,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                   width={32}
                   height={32}
                   className="object-contain"
+                  draggable={false}
                 />
               )}
               <div>
@@ -188,7 +192,15 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
 
         {/* Footer */}
         <div className="text-center text-sm text-gray-400 pt-4 border-t border-gray-100">
-          <p>{t('common.appName')}</p>
+          <Link
+            href="https://fatourati.vercel.app"
+            className=""
+            draggable={false}
+          >
+          <div className="flex h-8 w-full items-center justify-center">
+            <Logo />
+          </div>
+        </Link>
         </div>
       </div>
     )

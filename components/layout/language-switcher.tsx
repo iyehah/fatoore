@@ -16,9 +16,6 @@ const FLAGS: Record<(typeof ACTIVE_LANGUAGE_CODES)[number], string> = {
   ar: '🇲🇷',
   fr: '🇫🇷',
   en: '🇬🇧',
-  es: '🇪🇸',
-  pt: '🇵🇹',
-  de: '🇩🇪',
 }
 
 export function LanguageSwitcher() {

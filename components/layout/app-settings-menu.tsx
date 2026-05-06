@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Monitor, Moon, Settings2, Sun } from 'lucide-react'
+import { Monitor, Moon, Settings, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -39,13 +39,13 @@ export function AppSettingsMenu({ className }: { className?: string }) {
           variant="outline"
           size="icon"
           className={cn(
-            'shrink-0 border-border/70 bg-background/90 shadow-sm backdrop-blur-sm',
+            'shrink-0 border-border/70 bg-background/90 backdrop-blur-sm',
             'hover:bg-accent/80',
             className,
           )}
           aria-label={t('settings.menuTitle')}
         >
-          <Settings2 className="h-4 w-4" />
+          <Settings className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
