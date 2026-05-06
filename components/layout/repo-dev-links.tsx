@@ -4,7 +4,7 @@ import { FaGithub } from 'react-icons/fa'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/hooks/use-language'
 
-const GITHUB_REPO_URL = 'https://github.com/iyehah/rimInvoice'
+const GITHUB_REPO_URL = 'https://github.com/iyehah/fatourati'
 const PORTFOLIO_URL = 'https://iyehah.com'
 
 interface RepoDevLinksProps {

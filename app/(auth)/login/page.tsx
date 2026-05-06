@@ -5,6 +5,7 @@ import { LoginForm } from '@/components/auth/login-form'
 import { AppSettingsMenu } from '@/components/layout/app-settings-menu'
 import { RepoDevLinks } from '@/components/layout/repo-dev-links'
 import { useLanguage } from '@/hooks/use-language'
+import Logo from '@/components/logo'
 
 export default function LoginPage() {
   const { t } = useLanguage()
@@ -13,8 +14,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col bg-linear-to-b from-muted/40 via-background to-background">
       <header className="flex items-center justify-between border-b border-border/60 px-4 py-3 backdrop-blur-sm sm:px-6">
         <div className="flex items-center gap-2 font-semibold">
-          <Image width={20} height={20} src="/logo.svg" alt="Logo" draggable={false} />
-          <span>{t('common.appName')}</span>
+          <Logo />
         </div>
         <div className="flex items-center gap-2">
           <RepoDevLinks />

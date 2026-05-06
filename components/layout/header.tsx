@@ -25,13 +25,6 @@ export function Header() {
     <header className="sticky top-0 z-40 flex h-15.5 shrink-0 items-center gap-2 border-b border-border/80 bg-background/90 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-4">
       <SidebarTrigger className="-ms-0.5" />
       <Separator orientation="vertical" className="me-1 h-6" />
-      <Link
-        href="/dashboard"
-        className="flex items-center gap-2 font-semibold text-foreground/90 md:hidden"
-      >
-        {/* <Image width={30} height={30} src="/logo.svg" alt="Logo" draggable={false} /> */}
-        <span className='text-bold'>{t('common.appName')}</span>
-      </Link>
       <div className="ms-auto flex items-center gap-1 sm:gap-2">
         <RepoDevLinks />
         <AppSettingsMenu />

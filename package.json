@@ -1,16 +1,16 @@
 {
-  "name": "riminvoice",
-  "version": "0.1.0",
+  "name": "fatourati",
+  "version": "1.0.0",
   "description": "Invoice management for Mauritania — Next.js, Firebase, local-first drafts",
-  "author": "iyehah (https://github.com/iyehah)",
+  "author": "iyehah (https://iyehah.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iyehah/rimInvoice.git"
+    "url": "https://github.com/iyehah/fatourati.git"
   },
-  "homepage": "https://riminvoice.vercel.app",
+  "homepage": "https://fatourati.vercel.app",
   "bugs": {
-    "url": "https://github.com/iyehah/rimInvoice/issues"
+    "url": "https://github.com/iyehah/fatourati/issues"
   },
   "scripts": {
     "dev": "next dev",

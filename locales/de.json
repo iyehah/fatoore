@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "RimInvoice",
+    "appName": "Fatourati",
     "loading": "Wird geladen...",
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -52,7 +52,7 @@
     "mainNavigation": "Navigation",
     "toggleSidebar": "Menü ein- oder ausblenden",
     "comingSoon": "Demnächst",
-    "githubRepo": "RimInvoice-Quellcode auf GitHub",
+    "githubRepo": "Fatourati-Quellcode auf GitHub",
     "devByPortfolio": "Dev by iyehah"
   },
   "auth": {
@@ -174,7 +174,7 @@
     "description": "Sprache und Erscheinungsbild. Wird auf diesem Gerät gespeichert.",
     "appearance": "Darstellung",
     "language": "Sprache",
-    "languageDescription": "Oberflächensprache von RimInvoice.",
+    "languageDescription": "Lokale Dialekte.",
     "theme": "Design",
     "themeDescription": "Hell, dunkel oder Systemeinstellung.",
     "currency": "Währung",

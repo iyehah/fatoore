@@ -166,6 +166,7 @@ export function InvoiceForm({
                           height={56}
                           unoptimized
                           className="h-14 w-14 object-contain"
+                          draggable={false}
                         />
                       ) : (
                         <span className="text-xl font-bold text-muted-foreground">

@@ -30,6 +30,7 @@ import { LogOut } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { useLanguage } from '@/hooks/use-language'
 import { cn } from '@/lib/utils'
+import Logo from '../logo'
 
 export function AppSidebar() {
   const pathname = usePathname()
@@ -59,12 +60,12 @@ export function AppSidebar() {
       <SidebarHeader className="space-y-3 border-b border-sidebar-border pb-3">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 rounded-md font-semibold outline-none ring-sidebar-ring focus-visible:ring-2"
+          className=""
+          draggable={false}
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-sidebar-primary-foreground">
-            <Image width={30} height={30} src="/logo.svg" alt="Logo" draggable={false} />
+          <div className="flex h-8 w-full  items-center justify-center">
+            <Logo />
           </div>
-          <span className="truncate text-bold group-data-[collapsible=icon]:hidden">{t('common.appName')}</span>
         </Link>
         
       </SidebarHeader>

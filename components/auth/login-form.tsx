@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/hooks/use-auth'
 import { useLanguage } from '@/hooks/use-language'
+import Logo from '../logo';
 
 export function LoginForm() {
   const router = useRouter()
@@ -22,8 +23,10 @@ export function LoginForm() {
   return (
     <Card className="mx-auto w-full max-w-md overflow-hidden border-border/80 shadow-lg">
       <CardHeader className="space-y-1 border-b border-border/60 bg-muted/30 pb-6 text-center">
-        <CardTitle className="text-2xl font-bold tracking-tight">{t('common.appName')}</CardTitle>
-        <CardDescription className="text-base">{t('auth.continueWithGoogle')}</CardDescription>
+        <CardTitle className="flex items-center justify-center">
+          <Logo/>
+        </CardTitle>
+        <CardDescription>{t('auth.continueWithGoogle')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
         <Button
