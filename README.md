@@ -1,13 +1,14 @@
 # RimInvoice
 
-Web app for creating and managing invoices with support for Mauritanian context (MRU, local payment methods such as Bankily, Seddad, Masrvi, BimBank). Authentication and user records use **Firebase**; invoices and business branding profiles are stored **in the browser** (`localStorage`) per signed-in user.
+Fast web app for creating and managing invoices with support for Mauritanian context (MRU, local payment methods such as Bankily, Seddad, Masrvi, BimBank). Authentication and user records use **Firebase**; invoices and business branding profiles are stored **in the browser** (`localStorage`) per signed-in user.
 
 ## Features
 
-- **Authentication**: Google sign-in (and hooks for email, phone OTP, Facebook where enabled in Firebase).
+- **Authentication**: Google account sign-in only in the current UI (no OTP flow exposed on login screen).
 - **Dashboard**: Overview and quick access to invoices.
-- **Invoices**: Create drafts, list and search, open detail view, delete. Line items, tax, discount, payment method and notes.
-- **Business profiles**: Multiple businesses per account, default profile for new invoices, logo upload (stored as base64 in local storage).
+- **Invoices**: Fast invoice creation with drafts, list/search, detail view, and delete. Supports line items, tax, discount, payment method, and notes.
+- **Business profiles**: Multiple businesses per account, default profile for new invoices, and branding data per profile.
+- **Branding**: Project logo is served from `public/logo.svg` and rendered via `components/logo.tsx`.
 - **Export**: Download invoice as **PNG** or **PDF** from the preview dialog (`html-to-image` + `jspdf`).
 - **Internationalization**: Arabic (default RTL), French, English, Spanish, Portuguese, German; theme (light / dark / system) and language persisted locally.
 - **Feedback**: Toast notifications for auth, profile changes, invoice actions, and downloads.
@@ -67,7 +68,7 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 
 ### Firebase checklist
 
-1. Enable **Google** (or other) sign-in under **Authentication → Sign-in method**.
+1. Enable **Google** sign-in under **Authentication → Sign-in method**.
 2. Create a **Firestore** database. The app expects a `users` collection and user documents (see `services/firebase/firestore.ts`). Adjust **security rules** for production so users can only read/write their own data.
 3. If the API key is restricted in Google Cloud Console, allow your dev origin (e.g. `http://localhost:3000`) and production domain for the **Web API key** used by Firebase Auth.
 
