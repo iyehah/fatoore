@@ -193,7 +193,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         {/* Footer */}
         <div className="text-center text-sm text-gray-400 pt-4 border-t border-gray-100">
           <Link
-            href="https://fatourati.vercel.app"
+            href="https://fatoora.vercel.app"
             className=""
             draggable={false}
           >

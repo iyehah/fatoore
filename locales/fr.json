@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Fatourati",
+    "appName": "Fatoora",
     "loading": "Chargement...",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -52,7 +52,7 @@
     "mainNavigation": "Navigation",
     "toggleSidebar": "Afficher ou masquer le menu",
     "comingSoon": "Bientôt",
-    "githubRepo": "Code source Fatourati sur GitHub",
+    "githubRepo": "Code source Fatoora sur GitHub",
     "devByPortfolio": "Dev by iyehah"
   },
   "auth": {

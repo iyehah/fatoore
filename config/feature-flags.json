@@ -43,6 +43,6 @@
       "requiresPremium": true
     }
   ],
-  "maintenanceMode": false,
+  "maintenanceMode": true,
   "allowNewRegistrations": true
 }
