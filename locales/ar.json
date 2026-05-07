@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "فاتورتي",
+    "appName": "فاتورة",
     "loading": "جاري التحميل...",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -52,7 +52,7 @@
     "mainNavigation": "التنقل",
     "toggleSidebar": "إظهار أو إخفاء القائمة",
     "comingSoon": "قريبًا",
-    "githubRepo": "الشيفرة المصدرية لفاتورتي على GitHub",
+    "githubRepo": "الشيفرة المصدرية لفاتورة على GitHub",
     "devByPortfolio": "تطوير: iyehah"
   },
   "auth": {

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Fatourati",
+    "appName": "fatoore",
     "loading": "Wird geladen...",
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -52,7 +52,7 @@
     "mainNavigation": "Navigation",
     "toggleSidebar": "Menü ein- oder ausblenden",
     "comingSoon": "Demnächst",
-    "githubRepo": "Fatourati-Quellcode auf GitHub",
+    "githubRepo": "fatoore-Quellcode auf GitHub",
     "devByPortfolio": "Dev by iyehah"
   },
   "auth": {

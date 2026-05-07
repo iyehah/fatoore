@@ -21,18 +21,18 @@ const notoArabic = Noto_Sans_Arabic({
 })
 
 export const metadata: Metadata = {
-  title: 'Fatourati - Invoice Management for Mauritania',
+  title: 'Fatoora - Invoice Management for Mauritania',
   description: 'Create and manage professional invoices with support for local payment methods like Bankily, Seddad, Masrvi, and BimBank.',
-  keywords: ['invoice', 'Mauritania', 'Bankily', 'Seddad', 'billing', 'فاتورة', 'موريتانيا'],
+  keywords: ['invoice', 'Mauritania', "Fatoora", "Bankily", "Seddad", "billing", "فاتورة", "موريتانيا"],
   authors: [{ name: 'Iyehah Hacen' }],
   icons: {
     icon: [
       {
-        url: '/logo.svg',
+        url: '/logo-light.svg',
         media: '(prefers-color-scheme: light)',
       },
       {
-        url: '/logo.svg',
+        url: '/logo-dark.svg',
         media: '(prefers-color-scheme: dark)',
       },
       {

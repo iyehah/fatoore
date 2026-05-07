@@ -1,16 +1,16 @@
 {
-  "name": "fatourati",
+  "name": "fatoore",
   "version": "1.0.0",
   "description": "Invoice management for Mauritania — Next.js, Firebase, local-first drafts",
   "author": "iyehah (https://iyehah.com)",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iyehah/fatourati.git"
+    "url": "https://github.com/iyehah/fatoore.git"
   },
-  "homepage": "https://fatourati.vercel.app",
+  "homepage": "https://fatoore.vercel.app",
   "bugs": {
-    "url": "https://github.com/iyehah/fatourati/issues"
+    "url": "https://github.com/iyehah/fatoore/issues"
   },
   "scripts": {
     "dev": "next dev",
