@@ -10,16 +10,6 @@
 
 > *Fatoore* Fast web app for creating and managing invoices with support for Mauritanian context (MRU, local payment methods such as Bankily, Seddad, Masrvi, BimBank). Authentication and user records use **Firebase**; invoices and business branding profiles are stored **in the browser** (`localStorage`) per signed-in user.
 
-## Features
-
-- **Authentication**: Google account sign-in only in the current UI (no OTP flow exposed on login screen).
-- **Dashboard**: Overview and quick access to invoices.
-- **Invoices**: Fast invoice creation with drafts, list/search, detail view, and delete. Supports line items, tax, discount, payment method, and notes.
-- **Business profiles**: Multiple businesses per account, default profile for new invoices, and branding data per profile.
-- **Export**: Download invoice as **PNG** or **PDF** from the preview dialog (`html-to-image` + `jspdf`).
-- **Internationalization**: Arabic (default RTL), French, English, Spanish, Portuguese, German; theme (light / dark / system) and language persisted locally.
-- **Feedback**: Toast notifications for auth, profile changes, invoice actions, and downloads.
-
 ## Requirements
 
 - **Node.js** 20+ (or current LTS) and npm  
