@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Fatoora",
+    "appName": "fatoore",
     "loading": "Wird geladen...",
     "save": "Speichern",
     "cancel": "Abbrechen",
@@ -52,7 +52,7 @@
     "mainNavigation": "Navigation",
     "toggleSidebar": "Menü ein- oder ausblenden",
     "comingSoon": "Demnächst",
-    "githubRepo": "Fatoora-Quellcode auf GitHub",
+    "githubRepo": "fatoore-Quellcode auf GitHub",
     "devByPortfolio": "Dev by iyehah"
   },
   "auth": {

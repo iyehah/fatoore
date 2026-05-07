@@ -69,7 +69,7 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
         <DialogDescription className="sr-only">{t('invoice.previewInvoice')}</DialogDescription>
         <DialogHeader className="flex shrink-0 flex-row items-center justify-between border-b border-border px-4 py-3 pe-12">
           <DialogTitle>{t('invoice.previewInvoice')}</DialogTitle>
-          <Button variant="ghost" size="icon" className="absolute end-2 top-2" onClick={() => onOpenChange(false)}>
+          <Button variant="ghost" size="icon" className="absolute inset-e-2 top-2" onClick={() => onOpenChange(false)}>
             <X className="h-4 w-4" />
           </Button>
         </DialogHeader>

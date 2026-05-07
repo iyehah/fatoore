@@ -46,12 +46,12 @@ export function PaymentMethodSelect({ value, onChange }: PaymentMethodSelectProp
             className={cn(
               'relative flex w-full flex-col gap-3 rounded-xl border-2 p-4 text-start transition-all sm:flex-row sm:items-center',
               selected
-                ? 'border-primary bg-primary/[0.06] shadow-sm ring-1 ring-primary/20'
+                ? 'border-primary bg-primary/6 shadow-sm ring-1 ring-primary/20'
                 : 'border-border/80 bg-card hover:border-primary/35 hover:bg-muted/40',
             )}
           >
             {selected && (
-              <span className="absolute end-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+              <span className="absolute inset-e-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
                 <Check className="h-3.5 w-3.5" strokeWidth={3} />
               </span>
             )}
