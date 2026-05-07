@@ -22,7 +22,7 @@ export function Header() {
   const { user, signOut } = useAuth()
 
   return (
-    <header className="sticky top-0 z-40 flex h-15.5 shrink-0 items-center gap-2 border-b border-border/80 bg-background/90 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 sm:px-4">
+    <header className="sticky top-0 z-40 flex h-15.5 shrink-0 items-center gap-2 border-b border-border/80 bg-background/90 px-3 backdrop-blur-md supports-backdrop-filter:bg-background/70 sm:px-4">
       <SidebarTrigger className="-ms-0.5" />
       <Separator orientation="vertical" className="me-1 h-6" />
       <div className="ms-auto flex items-center gap-1 sm:gap-2">
