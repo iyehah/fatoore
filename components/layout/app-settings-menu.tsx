@@ -116,7 +116,7 @@ export function AppSettingsMenu({ className }: { className?: string }) {
                 <SelectContent
                   dir={direction}
                   position="popper"
-                  className="max-h-[min(50vh,16rem)] w-[var(--radix-select-trigger-width)]"
+                  className="max-h-[min(50vh,16rem)] w-(--radix-select-trigger-width)"
                   onCloseAutoFocus={(e) => e.preventDefault()}
                 >
                   {fontOptions.map(({ key, label }) => (
