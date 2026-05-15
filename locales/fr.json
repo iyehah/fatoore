@@ -177,6 +177,8 @@
     "languageDescription": "Dialectes locaux.",
     "theme": "Thème",
     "themeDescription": "Clair, sombre ou selon le système.",
+    "fontFamily": "Police",
+    "fontFamilyDescription": "Police de l’interface — enregistrée sur cet appareil.",
     "currency": "Devise",
     "notifications": "Notifications",
     "account": "Compte",

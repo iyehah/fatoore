@@ -177,6 +177,8 @@
     "languageDescription": "Local dialects.",
     "theme": "Theme",
     "themeDescription": "Light, dark, or follow your system.",
+    "fontFamily": "Font",
+    "fontFamilyDescription": "UI typeface — saved on this device.",
     "currency": "Currency",
     "notifications": "Notifications",
     "account": "Account",

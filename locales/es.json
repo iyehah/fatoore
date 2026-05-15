@@ -177,6 +177,8 @@
     "languageDescription": "Lenguajes locales.",
     "theme": "Tema",
     "themeDescription": "Claro, oscuro o según el sistema.",
+    "fontFamily": "Tipo de letra",
+    "fontFamilyDescription": "Fuente de la interfaz — se guarda en este dispositivo.",
     "currency": "Moneda",
     "notifications": "Notificaciones",
     "account": "Cuenta",

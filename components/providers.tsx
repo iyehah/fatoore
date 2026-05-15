@@ -1,6 +1,7 @@
 'use client'
 
 import { type ReactNode } from 'react'
+import { FontProvider } from '@/components/font-provider'
 import { AuthProvider } from '@/hooks/use-auth'
 import { LanguageProvider } from '@/hooks/use-language'
 import { ThemeProvider } from 'next-themes'
@@ -18,12 +19,14 @@ export function Providers({ children }: ProvidersProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <LanguageProvider>
-        <AuthProvider>
-          {children}
-          <Toaster />
-        </AuthProvider>
-      </LanguageProvider>
+      <FontProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
+        </LanguageProvider>
+      </FontProvider>
     </ThemeProvider>
   )
 }

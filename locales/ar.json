@@ -177,6 +177,8 @@
     "languageDescription": "اللهجات المحلية.",
     "theme": "السمة",
     "themeDescription": "فاتح أو داكن أو حسب النظام.",
+    "fontFamily": "الخط",
+    "fontFamilyDescription": "خط الواجهة — يُحفظ على هذا الجهاز.",
     "currency": "العملة",
     "notifications": "الإشعارات",
     "account": "الحساب",

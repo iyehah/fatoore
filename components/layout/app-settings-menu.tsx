@@ -12,8 +12,17 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { useAppFontPreference } from '@/components/font-provider'
 import { useLanguage } from '@/hooks/use-language'
 import { ACTIVE_LANGUAGE_CODES, COMING_SOON_DIALECTS, isActiveLanguage } from '@/lib/i18n-config'
+import { fontOptions, fontRegistry, type FontKey } from '@/lib/fonts/registry'
 import { cn } from '@/lib/utils'
 
 const THEME_OPTIONS = [
@@ -26,13 +35,14 @@ export function AppSettingsMenu({ className }: { className?: string }) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const { language, setLanguage, t, direction } = useLanguage()
+  const { fontKey, setFontKey } = useAppFontPreference()
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   return (
-    <DropdownMenu dir={direction}>
+    <DropdownMenu dir={direction} modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           type="button"
@@ -85,6 +95,42 @@ export function AppSettingsMenu({ className }: { className?: string }) {
                 })}
               </div>
               <p className="mt-1.5 text-[11px] text-muted-foreground">{t('settings.themeDescription')}</p>
+            </div>
+
+            <div>
+              <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                {t('settings.fontFamily')}
+              </p>
+              <Select
+                value={fontKey}
+                onValueChange={(value) => {
+                  if (value in fontRegistry) setFontKey(value as FontKey)
+                }}
+              >
+                <SelectTrigger
+                  dir={direction}
+                  size="sm"
+                  className="h-auto min-h-9 w-full whitespace-normal py-2"
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent
+                  dir={direction}
+                  position="popper"
+                  className="max-h-[min(50vh,16rem)] w-[var(--radix-select-trigger-width)]"
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  {fontOptions.map(({ key, label }) => (
+                    <SelectItem key={key} value={key}>
+                      {label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="mt-1.5 text-[11px] text-muted-foreground">
+                {t('settings.fontFamilyDescription')}
+              </p>
             </div>
 
             <div>
