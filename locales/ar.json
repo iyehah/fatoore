@@ -38,6 +38,7 @@
   "dialects": {
     "groupLabel": "لغات محلية",
     "soonHint": "ترجمات كاملة قريبًا",
+    "selectPlaceholder": "لهجة محلية (قريبًا)",
     "hassaniya": "الحسانية",
     "pulaar": "الفولاني (بولار)",
     "soninke": "السونينكي",

@@ -8,8 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -137,44 +135,66 @@ export function AppSettingsMenu({ className }: { className?: string }) {
               <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                 {t('settings.language')}
               </p>
-              <DropdownMenuRadioGroup
+              <Select
                 value={language}
-                onValueChange={(v) => {
-                  if (isActiveLanguage(v)) setLanguage(v)
+                onValueChange={(value) => {
+                  if (isActiveLanguage(value)) setLanguage(value)
                 }}
-                className="grid gap-0.5"
               >
-                {ACTIVE_LANGUAGE_CODES.map((code) => (
-                  <DropdownMenuRadioItem
-                    key={code}
-                    value={code}
-                    className="cursor-pointer justify-between gap-2 py-2 text-sm"
-                  >
-                    <span>{t(`languages.${code}` as const)}</span>
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-              <p className="mt-1.5 text-[11px] text-muted-foreground">{t('settings.languageDescription')}</p>
+                <SelectTrigger
+                  dir={direction}
+                  size="sm"
+                  className="h-auto min-h-9 w-full whitespace-normal py-2"
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent
+                  dir={direction}
+                  position="popper"
+                  className="max-h-[min(50vh,16rem)] w-(--radix-select-trigger-width)"
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  {ACTIVE_LANGUAGE_CODES.map((code) => (
+                    <SelectItem key={code} value={code}>
+                      {t(`languages.${code}` as const)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="rounded-lg border border-dashed border-border/80 bg-muted/20 p-2.5">
-              <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                {t('dialects.groupLabel')}
+            <div>
+              <p className="mb-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                {t('settings.languageDescription')} ({t('dialects.soonHint')})
               </p>
-              <ul className="mt-2 space-y-1.5">
-                {COMING_SOON_DIALECTS.map((d) => (
-                  <li
-                    key={d.id}
-                    className="flex items-center justify-between gap-2 rounded-md px-1 py-0.5 text-sm text-muted-foreground"
-                  >
-                    <span>{t(d.labelKey)}</span>
-                    <Badge variant="secondary" className="text-[10px] font-normal tabular-nums">
-                      {t('layout.comingSoon')}
-                    </Badge>
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-2 text-[11px] leading-snug text-muted-foreground">{t('dialects.soonHint')}</p>
+              <Select>
+                <SelectTrigger
+                  dir={direction}
+                  size="sm"
+                  className="h-auto min-h-9 w-full whitespace-normal py-2"
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
+                  <SelectValue placeholder={t('dialects.selectPlaceholder')} />
+                </SelectTrigger>
+                <SelectContent
+                  dir={direction}
+                  position="popper"
+                  className="max-h-[min(50vh,16rem)] w-(--radix-select-trigger-width)"
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  {COMING_SOON_DIALECTS.map((d) => (
+                    <SelectItem key={d.id} value={d.id} disabled className="cursor-not-allowed">
+                      <span className="flex w-full min-w-0 items-center justify-between gap-2 pr-1">
+                        <span className="truncate">{t(d.labelKey)}</span>
+                        <Badge variant="secondary" className="shrink-0 text-[10px] font-normal tabular-nums">
+                          {t('layout.comingSoon')}
+                        </Badge>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>

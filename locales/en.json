@@ -38,6 +38,7 @@
   "dialects": {
     "groupLabel": "Local languages",
     "soonHint": "Full translations coming soon",
+    "selectPlaceholder": "Local dialect (coming soon)",
     "hassaniya": "Hassānīya",
     "pulaar": "Pulaar",
     "soninke": "Soninke",
