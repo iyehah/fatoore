@@ -1,3 +1,9 @@
+import type { InvoicePdfFormat } from '@/lib/invoice-preview-scale'
+
+export interface GeneratePdfOptions {
+  pdfFormat?: InvoicePdfFormat
+}
+
 type ExportTarget = {
   element: HTMLElement
   width: number
@@ -108,13 +114,17 @@ async function captureInvoicePngDataUrl(element: HTMLElement): Promise<{ dataUrl
   }
 }
 
-export async function generatePdf(element: HTMLElement, filename: string): Promise<void> {
+export async function generatePdf(
+  element: HTMLElement,
+  filename: string,
+  options?: GeneratePdfOptions,
+): Promise<void> {
   const [{ default: jsPDF }, capture] = await Promise.all([import('jspdf'), captureInvoicePngDataUrl(element)])
   const imgData = capture.dataUrl
   const pdf = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
-    format: 'a4',
+    format: options?.pdfFormat ?? 'a4',
     compress: true,
   })
 

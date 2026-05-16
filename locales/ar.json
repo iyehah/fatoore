@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "لا يوجد رقم ضريبي محفوظ لهذا النشاط.",
     "paymentMethodHint": "اختر طريقة الدفع المناسبة للعميل.",
     "paymentDetailsPlaceholder": "رقم الحساب، الهاتف، أو تعليمات الدفع",
-    "pickDueDate": "اختر تاريخ الاستحقاق"
+    "pickDueDate": "اختر تاريخ الاستحقاق",
+    "thankYou": "شكراً لتعاملكم معنا.",
+    "templateSize": "حجم القالب",
+    "templateSmall": "إيصال",
+    "templateMedium": "قياسي",
+    "templateLarge": "كامل"
   },
   "client": {
     "name": "اسم العميل",

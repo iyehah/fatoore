@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "Nenhum NIF guardado para este negócio.",
     "paymentMethodHint": "Indique como o cliente deve pagar.",
     "paymentDetailsPlaceholder": "Número de conta, telefone ou outras instruções de pagamento",
-    "pickDueDate": "Selecionar data de vencimento"
+    "pickDueDate": "Selecionar data de vencimento",
+    "thankYou": "Obrigado pela sua preferência.",
+    "templateSize": "Tamanho do modelo",
+    "templateSmall": "Recibo",
+    "templateMedium": "Padrão",
+    "templateLarge": "Completo"
   },
   "client": {
     "name": "Cliente",

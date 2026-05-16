@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Download, Image, Loader2, X } from 'lucide-react'
+import { Download, FileText, Image, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -11,7 +11,14 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { InvoicePreview } from './invoice-preview'
+import { InvoiceTemplateSizeToggle } from './invoice-template-size-toggle'
+import { useInvoiceTemplateSize } from '@/hooks/use-invoice-template-size'
+import {
+  getInvoiceFormat,
+  getInvoicePreviewMaxWidthClass,
+} from '@/lib/invoice-preview-scale'
 import { generatePdf, generateImage } from '@/lib/pdf-generator'
+import { cn } from '@/lib/utils'
 import { useLanguage } from '@/hooks/use-language'
 import { toast } from '@/hooks/use-toast'
 import type { Invoice } from '@/types/invoice'
@@ -24,6 +31,7 @@ interface InvoicePdfProps {
 
 export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
   const { t } = useLanguage()
+  const { templateSize, setTemplateSize } = useInvoiceTemplateSize()
   const previewRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState<'pdf' | 'image' | null>(null)
 
@@ -33,7 +41,9 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
     if (!previewRef.current) return
     setLoading('pdf')
     try {
-      await generatePdf(previewRef.current, `${baseName}.pdf`)
+      await generatePdf(previewRef.current, `${baseName}.pdf`, {
+        pdfFormat: getInvoiceFormat(templateSize).pdfFormat,
+      })
       toast({ title: t('toast.pdfDownloaded') })
     } catch (e) {
       toast({
@@ -71,12 +81,14 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
           <DialogTitle>{t('invoice.previewInvoice')}</DialogTitle>
         </DialogHeader>
 
-        <div className="flex shrink-0 flex-wrap gap-2 border-b border-border bg-muted/30 px-4 py-3">
+        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-border bg-muted/30 px-4 py-3">
+          <InvoiceTemplateSizeToggle value={templateSize} onChange={setTemplateSize} />
+          <div className="ms-auto flex flex-wrap gap-2">
           <Button variant="default" size="sm" onClick={handleDownloadPdf} disabled={!!loading}>
             {loading === 'pdf' ? (
               <Loader2 className="h-4 w-4 animate-spin me-2" />
             ) : (
-              <Download className="h-4 w-4 me-2" />
+              <FileText className="h-4 w-4 me-2" />
             )}
             {t('invoice.downloadPdf')}
           </Button>
@@ -88,11 +100,17 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
             )}
             {t('invoice.downloadImage')}
           </Button>
+          </div>
         </div>
 
         <div className="min-h-0 flex-1 overflow-auto bg-muted/20 p-4">
-          <div className="mx-auto max-w-2xl rounded-lg border border-border bg-white shadow-sm">
-            <InvoicePreview ref={previewRef} invoice={invoice} />
+          <div
+            className={cn(
+              'mx-auto overflow-hidden rounded-xl border border-border',
+              getInvoicePreviewMaxWidthClass(templateSize),
+            )}
+          >
+            <InvoicePreview ref={previewRef} invoice={invoice} templateSize={templateSize} />
           </div>
         </div>
       </DialogContent>

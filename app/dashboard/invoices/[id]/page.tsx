@@ -19,6 +19,10 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { InvoicePreview } from '@/components/invoice/invoice-preview'
+import { InvoiceTemplateSizeToggle } from '@/components/invoice/invoice-template-size-toggle'
+import { useInvoiceTemplateSize } from '@/hooks/use-invoice-template-size'
+import { getInvoicePreviewMaxWidthClass } from '@/lib/invoice-preview-scale'
+import { cn } from '@/lib/utils'
 import { useInvoice, useInvoiceActions } from '@/hooks/use-invoice'
 import { useLanguage } from '@/hooks/use-language'
 import { toast } from '@/hooks/use-toast'
@@ -40,6 +44,7 @@ export default function InvoiceDetailPage() {
   const { deleteInvoice, loading: actionLoading } = useInvoiceActions()
   
   const [showPreview, setShowPreview] = useState(false)
+  const { templateSize, setTemplateSize } = useInvoiceTemplateSize()
 
   const handleDelete = async () => {
     const success = await deleteInvoice(invoiceId)
@@ -88,7 +93,7 @@ export default function InvoiceDetailPage() {
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={() => setShowPreview(true)}>
             <Download className="h-4 w-4 me-2" />
-            {t('invoice.downloadPdf')}
+            {t('common.download')}
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -117,8 +122,18 @@ export default function InvoiceDetailPage() {
 
       {/* Invoice Preview */}
       <Card>
-        <CardContent className="p-6">
-          <InvoicePreview invoice={invoice} />
+        <CardContent className="space-y-4 p-4 sm:p-6">
+          <div className="flex justify-end">
+            <InvoiceTemplateSizeToggle value={templateSize} onChange={setTemplateSize} />
+          </div>
+          <div
+            className={cn(
+              'mx-auto overflow-hidden rounded-xl border border-border',
+              getInvoicePreviewMaxWidthClass(templateSize),
+            )}
+          >
+            <InvoicePreview invoice={invoice} templateSize={templateSize} />
+          </div>
         </CardContent>
       </Card>
 
