@@ -104,6 +104,7 @@ export function buildInvoiceCssVars(
     format.baseScale * DENSITY_SCALE[density] * Math.min(1, autoFitScale)
 
   return {
+    '--inv-doc-width': format.maxWidthCss,
     '--inv-scale': String(scale),
     '--inv-pad-x': `calc(${scale} * 28px)`,
     '--inv-pad-y': `calc(${scale} * 24px)`,

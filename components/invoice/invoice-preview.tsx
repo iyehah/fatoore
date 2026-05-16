@@ -12,14 +12,15 @@ import {
 import { CreditCard, UserRound } from 'lucide-react'
 import Link from 'next/link'
 import { useAppFontPreference } from '@/components/font-provider'
+import { useInvoiceAccentColor } from '@/hooks/use-invoice-accent-color'
 import { useLanguage } from '@/hooks/use-language'
 import { resolvedBodyFontFamily } from '@/lib/fonts/body-font-family'
 import { formatCurrency, formatDate } from '@/lib/invoice-utils'
+import { useInvoiceTemplateSize } from '@/hooks/use-invoice-template-size'
 import {
   computeAutoFitScale,
   computeInvoicePreviewMetrics,
   getInvoiceFormat,
-  type InvoiceTemplateSize,
 } from '@/lib/invoice-preview-scale'
 import { cn } from '@/lib/utils'
 import paymentMethodsConfig from '@/config/payment-methods.json'
@@ -30,13 +31,14 @@ import '@/styles/invoice-preview.css'
 interface InvoicePreviewProps {
   invoice: Partial<Invoice>
   className?: string
-  templateSize?: InvoiceTemplateSize
 }
 
 export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
-  function InvoicePreview({ invoice, className, templateSize = 'medium' }, ref) {
+  function InvoicePreview({ invoice, className }, ref) {
     const { language, direction, t } = useLanguage()
     const { fontKey } = useAppFontPreference()
+    const { templateSize } = useInvoiceTemplateSize()
+    const { accentCssVars, accentClassName } = useInvoiceAccentColor()
     const sheetRef = useRef<HTMLDivElement>(null)
     const [autoFitScale, setAutoFitScale] = useState(1)
 
@@ -62,10 +64,11 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
     const rootStyle = useMemo(
       (): CSSProperties => ({
         ...metrics.style,
+        ...accentCssVars,
         fontFamily,
         ['--inv-font-family' as string]: fontFamily,
       }),
-      [metrics.style, fontFamily],
+      [metrics.style, accentCssVars, fontFamily],
     )
 
     const hasTax = Boolean(invoice.taxAmount && invoice.taxAmount > 0)
@@ -113,6 +116,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
         className={cn(
           'invoice-doc',
           metrics.className,
+          accentClassName,
           language === 'ar' && 'invoice-doc--ar',
           className,
         )}

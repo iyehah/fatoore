@@ -139,7 +139,15 @@
     "templateSize": "Taille du modèle",
     "templateSmall": "Ticket",
     "templateMedium": "Standard",
-    "templateLarge": "Complet"
+    "templateLarge": "Complet",
+    "accentColor": "Couleur d'accent",
+    "accentBlack": "Noir",
+    "accentBlue": "Bleu",
+    "accentGreen": "Vert",
+    "accentOrange": "Orange",
+    "accentGray": "Gris",
+    "accentCustom": "Couleur personnalisée",
+    "applyAccentToBorders": "Appliquer aux bordures"
   },
   "client": {
     "name": "Nom du client",

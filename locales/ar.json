@@ -139,7 +139,15 @@
     "templateSize": "حجم القالب",
     "templateSmall": "إيصال",
     "templateMedium": "قياسي",
-    "templateLarge": "كامل"
+    "templateLarge": "كامل",
+    "accentColor": "لون التمييز",
+    "accentBlack": "أسود",
+    "accentBlue": "أزرق",
+    "accentGreen": "أخضر",
+    "accentOrange": "برتقالي",
+    "accentGray": "رمادي",
+    "accentCustom": "لون مخصص",
+    "applyAccentToBorders": "تطبيق على الحدود"
   },
   "client": {
     "name": "اسم العميل",
