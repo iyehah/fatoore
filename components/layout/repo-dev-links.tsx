@@ -3,6 +3,7 @@
 import { FaGithub } from 'react-icons/fa'
 import { Button } from '@/components/ui/button'
 import { useLanguage } from '@/hooks/use-language'
+import { CircleUser } from 'lucide-react'
 
 const GITHUB_REPO_URL = 'https://github.com/iyehah/fatourati'
 const PORTFOLIO_URL = 'https://iyehah.com'
@@ -32,14 +33,23 @@ export function RepoDevLinks({ className }: RepoDevLinksProps) {
           <FaGithub className="h-5 w-5" />
         </a>
       </Button>
-      <a
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
+        asChild
+      >
+        <a
         href={PORTFOLIO_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="whitespace-nowrap text-xs font-medium text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline sm:text-sm"
+        title={t('layout.devByPortfolio')}
+        aria-label={t('layout.devByPortfolio')}
       >
-        {t('layout.devByPortfolio')}
+        <CircleUser className="h-4 w-4" />
       </a>
+      </Button>
     </div>
   )
 }

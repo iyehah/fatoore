@@ -116,6 +116,9 @@ importers:
       firebase:
         specifier: ^12.12.0
         version: 12.12.0
+      geist:
+        specifier: ^1.7.0
+        version: 1.7.0(next@16.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))
       html-to-image:
         specifier: ^1.11.13
         version: 1.11.13
@@ -1727,6 +1730,11 @@ packages:
 
   fraction.js@5.3.4:
     resolution: {integrity: sha512-1X1NTtiJphryn/uLQz3whtY6jK3fTqoE3ohKs0tT+Ujr1W59oopxmoEh7Lu5p6vBaPbgoM0bzveAW4Qi5RyWDQ==}
+
+  geist@1.7.0:
+    resolution: {integrity: sha512-ZaoiZwkSf0DwwB1ncdLKp+ggAldqxl5L1+SXaNIBGkPAqcu+xjVJLxlf3/S8vLt9UHx1xu5fz3lbzKCj5iOVdQ==}
+    peerDependencies:
+      next: '>=13.2.0'
 
   get-caller-file@2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
@@ -3773,6 +3781,10 @@ snapshots:
       - '@react-native-async-storage/async-storage'
 
   fraction.js@5.3.4: {}
+
+  geist@1.7.0(next@16.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)):
+    dependencies:
+      next: 16.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
   get-caller-file@2.0.5: {}
 

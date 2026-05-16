@@ -38,6 +38,7 @@
   "dialects": {
     "groupLabel": "Lenguas locales",
     "soonHint": "Traducciones completas próximamente",
+    "selectPlaceholder": "Dialecto local (pronto)",
     "hassaniya": "Hassānīya",
     "pulaar": "Pulaar",
     "soninke": "Soninke",
@@ -177,6 +178,8 @@
     "languageDescription": "Lenguajes locales.",
     "theme": "Tema",
     "themeDescription": "Claro, oscuro o según el sistema.",
+    "fontFamily": "Tipo de letra",
+    "fontFamilyDescription": "Fuente de la interfaz — se guarda en este dispositivo.",
     "currency": "Moneda",
     "notifications": "Notificaciones",
     "account": "Cuenta",

@@ -38,6 +38,7 @@
   "dialects": {
     "groupLabel": "لغات محلية",
     "soonHint": "ترجمات كاملة قريبًا",
+    "selectPlaceholder": "لهجة محلية (قريبًا)",
     "hassaniya": "الحسانية",
     "pulaar": "الفولاني (بولار)",
     "soninke": "السونينكي",
@@ -177,6 +178,8 @@
     "languageDescription": "اللهجات المحلية.",
     "theme": "السمة",
     "themeDescription": "فاتح أو داكن أو حسب النظام.",
+    "fontFamily": "الخط",
+    "fontFamilyDescription": "خط الواجهة — يُحفظ على هذا الجهاز.",
     "currency": "العملة",
     "notifications": "الإشعارات",
     "account": "الحساب",

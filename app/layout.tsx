@@ -1,24 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import { Geist, Geist_Mono, Noto_Sans_Arabic } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import { Providers } from '@/components/providers'
+import { notoSansArabic, resolvedBodyFontFamily } from '@/lib/fonts/body-font-family'
+import { fontVars } from '@/lib/fonts/registry'
 import '@/styles/globals.css'
-
-const geist = Geist({ 
-  subsets: ['latin'],
-  variable: '--font-geist',
-})
-
-const geistMono = Geist_Mono({ 
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-})
-
-const notoArabic = Noto_Sans_Arabic({
-  subsets: ['arabic'],
-  variable: '--font-noto-arabic',
-  weight: ['400', '500', '600', '700'],
-})
 
 export const metadata: Metadata = {
   title: 'Fatoora - Invoice Management for Mauritania',
@@ -59,8 +43,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <body className={`${geist.variable} ${geistMono.variable} ${notoArabic.variable} font-sans antialiased bg-background text-foreground`}>
+    <html lang="ar" dir="rtl" suppressHydrationWarning >
+      <body
+        className={`${fontVars} ${notoSansArabic.variable} antialiased bg-background text-foreground`}
+        style={{ fontFamily: resolvedBodyFontFamily('geist') }}
+      >
         <Providers>
           {children}
         </Providers>

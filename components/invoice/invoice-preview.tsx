@@ -198,7 +198,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
             draggable={false}
           >
           <div className="flex h-8 w-full items-center justify-center">
-            <Logo />
+            <Logo size='small' />
           </div>
         </Link>
         </div>

@@ -38,6 +38,7 @@
   "dialects": {
     "groupLabel": "Regionalsprachen",
     "soonHint": "Vollständige Übersetzungen folgen",
+    "selectPlaceholder": "Lokaler Dialekt (demnächst)",
     "hassaniya": "Hassānīya",
     "pulaar": "Pulaar",
     "soninke": "Soninke",
@@ -177,6 +178,8 @@
     "languageDescription": "Lokale Dialekte.",
     "theme": "Design",
     "themeDescription": "Hell, dunkel oder Systemeinstellung.",
+    "fontFamily": "Schriftart",
+    "fontFamilyDescription": "Schriftart der Oberfläche — wird auf diesem Gerät gespeichert.",
     "currency": "Währung",
     "notifications": "Benachrichtigungen",
     "account": "Konto",
