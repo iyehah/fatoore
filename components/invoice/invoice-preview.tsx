@@ -155,7 +155,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
             </div>
 
             <div className="invoice-header__title-block">
-              <h2 className="invoice-header__title">{t('invoice.title')}</h2>
+              <h2 className="invoice-header__title text-center">{t('invoice.title')}</h2>
               <p className="invoice-header__detail text-center">
                 <span className="invoice-header__detail-label">
                   {t('invoice.invoiceNumber')}:
