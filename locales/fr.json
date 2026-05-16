@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "Aucun identifiant fiscal enregistré pour cette entreprise.",
     "paymentMethodHint": "Indiquez comment le client doit vous payer.",
     "paymentDetailsPlaceholder": "Numéro de compte, téléphone ou instructions de paiement",
-    "pickDueDate": "Choisir la date d’échéance"
+    "pickDueDate": "Choisir la date d’échéance",
+    "thankYou": "Merci pour votre confiance.",
+    "templateSize": "Taille du modèle",
+    "templateSmall": "Ticket",
+    "templateMedium": "Standard",
+    "templateLarge": "Complet"
   },
   "client": {
     "name": "Nom du client",

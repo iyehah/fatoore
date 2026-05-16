@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "No hay identificación fiscal guardada para este negocio.",
     "paymentMethodHint": "Indica cómo debe pagarte el cliente.",
     "paymentDetailsPlaceholder": "Número de cuenta, teléfono u otras instrucciones de pago",
-    "pickDueDate": "Seleccionar fecha de vencimiento"
+    "pickDueDate": "Seleccionar fecha de vencimiento",
+    "thankYou": "Gracias por su confianza.",
+    "templateSize": "Tamaño de plantilla",
+    "templateSmall": "Ticket",
+    "templateMedium": "Estándar",
+    "templateLarge": "Completo"
   },
   "client": {
     "name": "Cliente",

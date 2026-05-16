@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "Für dieses Unternehmen ist keine Steuernummer hinterlegt.",
     "paymentMethodHint": "Legen Sie fest, wie Kunden zahlen sollen.",
     "paymentDetailsPlaceholder": "Kontonummer, Telefon oder Zahlungshinweise",
-    "pickDueDate": "Fälligkeitsdatum wählen"
+    "pickDueDate": "Fälligkeitsdatum wählen",
+    "thankYou": "Vielen Dank für Ihr Vertrauen.",
+    "templateSize": "Vorlagengröße",
+    "templateSmall": "Beleg",
+    "templateMedium": "Standard",
+    "templateLarge": "Voll"
   },
   "client": {
     "name": "Kunde",

@@ -134,7 +134,12 @@
     "noTaxIdOnProfile": "No tax ID on file for this business.",
     "paymentMethodHint": "Choose how clients should pay you.",
     "paymentDetailsPlaceholder": "Account number, phone, or other payment instructions",
-    "pickDueDate": "Select due date"
+    "pickDueDate": "Select due date",
+    "thankYou": "Thank you for your business.",
+    "templateSize": "Template size",
+    "templateSmall": "Ticket",
+    "templateMedium": "Standard",
+    "templateLarge": "Full"
   },
   "client": {
     "name": "Client Name",

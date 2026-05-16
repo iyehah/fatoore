@@ -1,24 +1,50 @@
 'use client'
 
-import { forwardRef } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react'
+import { CreditCard, UserRound } from 'lucide-react'
+import Link from 'next/link'
+import { useAppFontPreference } from '@/components/font-provider'
 import { useLanguage } from '@/hooks/use-language'
+import { resolvedBodyFontFamily } from '@/lib/fonts/body-font-family'
 import { formatCurrency, formatDate } from '@/lib/invoice-utils'
+import {
+  computeAutoFitScale,
+  computeInvoicePreviewMetrics,
+  getInvoiceFormat,
+  type InvoiceTemplateSize,
+} from '@/lib/invoice-preview-scale'
+import { cn } from '@/lib/utils'
 import paymentMethodsConfig from '@/config/payment-methods.json'
 import type { Invoice } from '@/types/invoice'
-import Link from 'next/link'
 import Logo from '../logo'
+import '@/styles/invoice-preview.css'
 
 interface InvoicePreviewProps {
   invoice: Partial<Invoice>
   className?: string
+  templateSize?: InvoiceTemplateSize
 }
 
 export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
-  function InvoicePreview({ invoice, className }, ref) {
+  function InvoicePreview({ invoice, className, templateSize = 'medium' }, ref) {
     const { language, direction, t } = useLanguage()
+    const { fontKey } = useAppFontPreference()
+    const sheetRef = useRef<HTMLDivElement>(null)
+    const [autoFitScale, setAutoFitScale] = useState(1)
+
+    const format = getInvoiceFormat(templateSize)
+    const fontFamily = resolvedBodyFontFamily(fontKey)
 
     const paymentMethod = paymentMethodsConfig.methods.find(
-      (m) => m.id === invoice.paymentMethod
+      (m) => m.id === invoice.paymentMethod,
     )
 
     const getPaymentMethodName = () => {
@@ -28,181 +54,277 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
       return paymentMethod.name
     }
 
+    const metrics = useMemo(
+      () => computeInvoicePreviewMetrics(invoice, templateSize, autoFitScale),
+      [invoice, templateSize, autoFitScale],
+    )
+
+    const rootStyle = useMemo(
+      (): CSSProperties => ({
+        ...metrics.style,
+        fontFamily,
+        ['--inv-font-family' as string]: fontFamily,
+      }),
+      [metrics.style, fontFamily],
+    )
+
+    const hasTax = Boolean(invoice.taxAmount && invoice.taxAmount > 0)
+    const hasDiscount = Boolean(invoice.discount && invoice.discount > 0)
+    const hasPayment = Boolean(invoice.paymentMethod)
+    const hasNotes = Boolean(invoice.notes)
+    const hasSideContent = hasPayment || hasNotes
+    const itemCount = invoice.items?.length ?? 0
+
+    useEffect(() => {
+      setAutoFitScale(1)
+    }, [templateSize])
+
+    useLayoutEffect(() => {
+      const sheet = sheetRef.current
+      if (!sheet) return
+
+      const measure = () => {
+        const contentHeight = sheet.scrollHeight
+        const next = computeAutoFitScale(contentHeight, format.maxPageHeightPx)
+        setAutoFitScale((prev) => (Math.abs(prev - next) < 0.005 ? prev : next))
+      }
+
+      measure()
+      const observer = new ResizeObserver(measure)
+      observer.observe(sheet)
+      return () => observer.disconnect()
+    }, [
+      invoice,
+      templateSize,
+      format.maxPageHeightPx,
+      itemCount,
+      hasTax,
+      hasDiscount,
+      hasPayment,
+      hasNotes,
+      language,
+      fontKey,
+    ])
+
     return (
       <div
         ref={ref}
-        className={`bg-white text-gray-900 p-8 max-w-2xl mx-auto ${className}`}
         dir={direction}
+        className={cn(
+          'invoice-doc',
+          metrics.className,
+          language === 'ar' && 'invoice-doc--ar',
+          className,
+        )}
+        style={rootStyle}
       >
-        {/* Header */}
-        <div className="flex justify-between items-start mb-8">
-          <div>
-            {invoice.businessLogo ? (
-              // eslint-disable-next-line @next/next/no-img-element -- html2canvas-friendly capture
-              <img
-                src={invoice.businessLogo}
-                alt={invoice.businessName || ''}
-                width={80}
-                height={80}
-                className="mb-2 h-20 w-20 object-contain"
-                draggable={false}
-              />
-            ) : (
-              <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center mb-2">
-                <span className="text-2xl font-bold text-gray-500">
-                  {invoice.businessName?.charAt(0) || 'B'}
-                </span>
-              </div>
-            )}
-            <h1 className="text-xl font-bold">{invoice.businessName}</h1>
-            {invoice.businessTaxId && (
-              <p className="text-xs text-gray-600" dir="ltr">
-                <span className="font-medium">{t('profile.taxId')}:</span> {invoice.businessTaxId}
-              </p>
-            )}
-            {invoice.businessPhone && (
-              <p className="text-sm text-gray-600" dir="ltr">{invoice.businessPhone}</p>
-            )}
-            {invoice.businessAddress && (
-              <p className="text-sm text-gray-600">{invoice.businessAddress}</p>
-            )}
-          </div>
-          <div className="text-end">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('invoice.title')}</h2>
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">{t('invoice.invoiceNumber')}:</span>{' '}
-              <span dir="ltr">{invoice.invoiceNumber}</span>
-            </p>
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">{t('invoice.date')}:</span>{' '}
-              {invoice.createdAt && formatDate(invoice.createdAt, language)}
-            </p>
-            {invoice.dueDate && (
-              <p className="text-sm text-gray-600">
-                <span className="font-medium">{t('invoice.dueDate')}:</span>{' '}
-                {formatDate(invoice.dueDate, language)}
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Bill To */}
-        <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">{t('invoice.billTo')}</h3>
-          <p className="font-semibold">{invoice.clientName}</p>
-          {invoice.clientPhone && (
-            <p className="text-sm text-gray-600" dir="ltr">{invoice.clientPhone}</p>
-          )}
-          {invoice.clientAddress && (
-            <p className="text-sm text-gray-600">{invoice.clientAddress}</p>
-          )}
-        </div>
-
-        {/* Items Table */}
-        <table className="w-full mb-8">
-          <thead>
-            <tr className="border-b-2 border-gray-200">
-              <th className="text-start py-2 text-sm font-medium text-gray-500">
-                {t('invoice.description')}
-              </th>
-              <th className="text-center py-2 text-sm font-medium text-gray-500 w-20">
-                {t('invoice.quantity')}
-              </th>
-              <th className="text-end py-2 text-sm font-medium text-gray-500 w-28">
-                {t('invoice.unitPrice')}
-              </th>
-              <th className="text-end py-2 text-sm font-medium text-gray-500 w-28">
-                {t('invoice.amount')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.items?.map((item, index) => (
-              <tr key={item.id || index} className="border-b border-gray-100">
-                <td className="py-3">{item.description}</td>
-                <td className="py-3 text-center" dir="ltr">{item.quantity}</td>
-                <td className="py-3 text-end" dir="ltr">{formatCurrency(item.unitPrice, invoice.currency)}</td>
-                <td className="py-3 text-end" dir="ltr">{formatCurrency(item.total, invoice.currency)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {/* Totals */}
-        <div className="flex justify-end mb-8">
-          <div className="w-64">
-            <div className="flex justify-between py-2">
-              <span className="text-gray-600">{t('invoice.subtotal')}</span>
-              <span dir="ltr">{formatCurrency(invoice.subtotal || 0, invoice.currency)}</span>
-            </div>
-            {invoice.taxAmount && invoice.taxAmount > 0 && (
-              <div className="flex justify-between py-2">
-                <span className="text-gray-600">{t('invoice.tax')} ({invoice.taxRate}%)</span>
-                <span dir="ltr">{formatCurrency(invoice.taxAmount, invoice.currency)}</span>
-              </div>
-            )}
-            {invoice.discount && invoice.discount > 0 && (
-              <div className="flex justify-between py-2 text-red-600">
-                <span>{t('invoice.discount')}</span>
-                <span dir="ltr">-{formatCurrency(invoice.discount, invoice.currency)}</span>
-              </div>
-            )}
-            <div className="flex justify-between py-3 border-t-2 border-gray-900 font-bold text-lg">
-              <span>{t('invoice.total')}</span>
-              <span dir="ltr">{formatCurrency(invoice.total || 0, invoice.currency)}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Payment Method */}
-        {invoice.paymentMethod && (
-          <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">
-              {t('invoice.paymentMethod')}
-            </h3>
-            <div className="flex items-center gap-3">
-              {paymentMethod?.logo && (
-                // eslint-disable-next-line @next/next/no-img-element
+        <div ref={sheetRef} className="invoice-doc__sheet">
+          <header className="invoice-header">
+            <div className="invoice-header__brand">
+              {invoice.businessLogo ? (
+                // eslint-disable-next-line @next/next/no-img-element -- html2canvas-friendly capture
                 <img
-                  src={paymentMethod.logo}
-                  alt=""
-                  width={32}
-                  height={32}
-                  className="object-contain"
+                  src={invoice.businessLogo}
+                  alt={invoice.businessName || ''}
+                  width={80}
+                  height={80}
+                  className="invoice-header__logo"
                   draggable={false}
                 />
+              ) : (
+                <div className="invoice-header__logo-fallback" aria-hidden>
+                  {invoice.businessName?.charAt(0) || 'B'}
+                </div>
               )}
-              <div>
-                <p className="font-medium">{getPaymentMethodName()}</p>
-                {invoice.paymentDetails && (
-                  <p className="text-sm text-gray-600" dir="ltr">{invoice.paymentDetails}</p>
+              <div className="invoice-header__company">
+                <h1 className="invoice-header__company-name">{invoice.businessName}</h1>
+                {invoice.businessTaxId && (
+                  <p className="invoice-header__meta-line" dir="ltr">
+                    <strong>{t('profile.taxId')}:</strong> {invoice.businessTaxId}
+                  </p>
+                )}
+                {invoice.businessPhone && (
+                  <p className="invoice-header__meta-line text-center" dir="ltr">
+                    {invoice.businessPhone}
+                  </p>
+                )}
+                {invoice.businessAddress && (
+                  <p className="invoice-header__meta-line text-center">{invoice.businessAddress}</p>
                 )}
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Notes */}
-        {invoice.notes && (
-          <div className="mb-8">
-            <h3 className="text-sm font-medium text-gray-500 mb-2">{t('invoice.notes')}</h3>
-            <p className="text-sm text-gray-600 whitespace-pre-wrap">{invoice.notes}</p>
-          </div>
-        )}
+            <div className="invoice-header__title-block">
+              <h2 className="invoice-header__title">{t('invoice.title')}</h2>
+              <p className="invoice-header__detail text-center">
+                <span className="invoice-header__detail-label">
+                  {t('invoice.invoiceNumber')}:
+                </span>{' '}
+                <span className="invoice-header__detail-value">
+                  {invoice.invoiceNumber}
+                </span>
+              </p>
+              <p className="invoice-header__detail text-center">
+                <span className="invoice-header__detail-label">{t('invoice.date')}:</span>{' '}
+                <span className="invoice-header__detail-value">
+                  {invoice.createdAt && formatDate(invoice.createdAt)}
+                </span>
+              </p>
+              {invoice.dueDate && (
+                <p className="invoice-header__detail text-center">
+                  <span className="invoice-header__detail-label">{t('invoice.dueDate')}:</span>{' '}
+                  <span className="invoice-header__detail-value">
+                    {formatDate(invoice.dueDate)}
+                  </span>
+                </p>
+              )}
+            </div>
+          </header>
 
-        {/* Footer */}
-        <div className="text-center text-sm text-gray-400 pt-4 border-t border-gray-100">
-          <Link
-            href="https://fatoore.vercel.app"
-            className=""
-            draggable={false}
-          >
-          <div className="flex h-8 w-full items-center justify-center">
-            <Logo size='small' />
+          <hr className="invoice-separator" />
+
+          <section className="invoice-card invoice-customer">
+            <div className="invoice-customer__avatar" aria-hidden>
+              <UserRound />
+            </div>
+            <div>
+              <p className="invoice-card__label">{t('invoice.billTo')}</p>
+              <p className="invoice-customer__name">{invoice.clientName}</p>
+              {invoice.clientPhone && (
+                <p className="invoice-customer__line" dir="ltr">
+                  {invoice.clientPhone}
+                </p>
+              )}
+              {invoice.clientAddress && (
+                <p className="invoice-customer__line">{invoice.clientAddress}</p>
+              )}
+            </div>
+          </section>
+
+          <div className="invoice-doc__main">
+            <div className="invoice-table-wrap">
+              <table className="invoice-table">
+                <thead>
+                  <tr>
+                    <th>{t('invoice.description')}</th>
+                    <th className="invoice-table__col-qty">{t('invoice.quantity')}</th>
+                    <th className="invoice-table__col-money">{t('invoice.unitPrice')}</th>
+                    <th className="invoice-table__col-total">{t('invoice.amount')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {invoice.items?.map((item, index) => (
+                    <tr key={item.id || index}>
+                      <td className="invoice-table__desc">{item.description}</td>
+                      <td className="invoice-table__qty" dir="ltr">
+                        {item.quantity}
+                      </td>
+                      <td className="invoice-table__money" dir="ltr">
+                        {formatCurrency(item.unitPrice, invoice.currency)}
+                      </td>
+                      <td className="invoice-table__total" dir="ltr">
+                        {formatCurrency(item.total, invoice.currency)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              className={cn(
+                'invoice-bottom',
+                !hasSideContent && 'invoice-bottom--totals-only',
+              )}
+            >
+              {hasSideContent && (
+                <div className="invoice-bottom__side">
+                  {hasPayment && (
+                    <section className="invoice-card invoice-payment">
+                      <p className="invoice-card__label">{t('invoice.paymentMethod')}</p>
+                      <div className="invoice-payment">
+                        {paymentMethod?.logo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={paymentMethod.logo}
+                            alt=""
+                            width={32}
+                            height={32}
+                            className="invoice-payment__logo"
+                            draggable={false}
+                          />
+                        ) : (
+                          <div className="invoice-payment__icon" aria-hidden>
+                            <CreditCard />
+                          </div>
+                        )}
+                        <div>
+                          <p className="invoice-payment__name">{getPaymentMethodName()}</p>
+                          {invoice.paymentDetails && (
+                            <p className="invoice-payment__details" dir="ltr">
+                              {invoice.paymentDetails}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
+                  {hasNotes && (
+                    <section className="invoice-card">
+                      <p className="invoice-card__label">{t('invoice.notes')}</p>
+                      <p className="invoice-notes">{invoice.notes}</p>
+                    </section>
+                  )}
+                </div>
+              )}
+
+              <aside className="invoice-totals">
+                <div className="invoice-totals__row">
+                  <span>{t('invoice.subtotal')}</span>
+                  <span dir="ltr">
+                    {formatCurrency(invoice.subtotal || 0, invoice.currency)}
+                  </span>
+                </div>
+                {hasTax && (
+                  <div className="invoice-totals__row">
+                    <span>
+                      {t('invoice.tax')} ({invoice.taxRate}%)
+                    </span>
+                    <span dir="ltr">
+                      {formatCurrency(invoice.taxAmount!, invoice.currency)}
+                    </span>
+                  </div>
+                )}
+                {hasDiscount && (
+                  <div className="invoice-totals__row invoice-totals__row--discount">
+                    <span>{t('invoice.discount')}</span>
+                    <span dir="ltr">
+                      -{formatCurrency(invoice.discount!, invoice.currency)}
+                    </span>
+                  </div>
+                )}
+                <hr className="invoice-totals__divider" />
+                <div className="invoice-totals__grand">
+                  <span className="invoice-totals__grand-label">{t('invoice.total')}</span>
+                  <span className="invoice-totals__grand-value" dir="ltr">
+                    {formatCurrency(invoice.total || 0, invoice.currency)}
+                  </span>
+                </div>
+              </aside>
+            </div>
           </div>
-        </Link>
+
+          <footer className="invoice-footer">
+            <p className="invoice-footer__thanks">{t('invoice.thankYou')}</p>
+            <div className="invoice-footer__brand">
+              <Link href="https://fatoore.vercel.app" draggable={false}>
+                <Logo size="small" />
+              </Link>
+            </div>
+          </footer>
         </div>
       </div>
     )
-  }
+  },
 )
