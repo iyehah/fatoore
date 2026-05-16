@@ -139,7 +139,15 @@
     "templateSize": "Tamanho do modelo",
     "templateSmall": "Recibo",
     "templateMedium": "Padrão",
-    "templateLarge": "Completo"
+    "templateLarge": "Completo",
+    "accentColor": "Cor de destaque",
+    "accentBlack": "Preto",
+    "accentBlue": "Azul",
+    "accentGreen": "Verde",
+    "accentOrange": "Laranja",
+    "accentGray": "Cinza",
+    "accentCustom": "Cor personalizada",
+    "applyAccentToBorders": "Aplicar às bordas"
   },
   "client": {
     "name": "Cliente",

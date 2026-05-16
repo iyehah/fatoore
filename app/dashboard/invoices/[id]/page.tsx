@@ -18,11 +18,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { InvoiceAccentColorProvider } from '@/components/invoice/invoice-accent-color-provider'
 import { InvoicePreview } from '@/components/invoice/invoice-preview'
-import { InvoiceTemplateSizeToggle } from '@/components/invoice/invoice-template-size-toggle'
-import { useInvoiceTemplateSize } from '@/hooks/use-invoice-template-size'
-import { getInvoicePreviewMaxWidthClass } from '@/lib/invoice-preview-scale'
-import { cn } from '@/lib/utils'
+import { InvoicePreviewFrame } from '@/components/invoice/invoice-preview-frame'
+import { InvoicePreviewToolbar } from '@/components/invoice/invoice-preview-toolbar'
+import { InvoiceTemplateSizeProvider } from '@/components/invoice/invoice-template-size-provider'
 import { useInvoice, useInvoiceActions } from '@/hooks/use-invoice'
 import { useLanguage } from '@/hooks/use-language'
 import { toast } from '@/hooks/use-toast'
@@ -44,7 +44,6 @@ export default function InvoiceDetailPage() {
   const { deleteInvoice, loading: actionLoading } = useInvoiceActions()
   
   const [showPreview, setShowPreview] = useState(false)
-  const { templateSize, setTemplateSize } = useInvoiceTemplateSize()
 
   const handleDelete = async () => {
     const success = await deleteInvoice(invoiceId)
@@ -123,17 +122,14 @@ export default function InvoiceDetailPage() {
       {/* Invoice Preview */}
       <Card>
         <CardContent className="space-y-4 p-4 sm:p-6">
-          <div className="flex justify-end">
-            <InvoiceTemplateSizeToggle value={templateSize} onChange={setTemplateSize} />
-          </div>
-          <div
-            className={cn(
-              'mx-auto overflow-hidden rounded-xl border border-border',
-              getInvoicePreviewMaxWidthClass(templateSize),
-            )}
-          >
-            <InvoicePreview invoice={invoice} templateSize={templateSize} />
-          </div>
+          <InvoiceTemplateSizeProvider>
+            <InvoiceAccentColorProvider>
+              <InvoicePreviewToolbar className="rounded-lg border border-border" />
+              <InvoicePreviewFrame>
+                <InvoicePreview invoice={invoice} />
+              </InvoicePreviewFrame>
+            </InvoiceAccentColorProvider>
+          </InvoiceTemplateSizeProvider>
         </CardContent>
       </Card>
 

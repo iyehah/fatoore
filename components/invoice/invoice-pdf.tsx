@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { Download, FileText, Image, Loader2 } from 'lucide-react'
+import { FileText, Image, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -10,15 +10,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { InvoiceAccentColorProvider } from './invoice-accent-color-provider'
 import { InvoicePreview } from './invoice-preview'
-import { InvoiceTemplateSizeToggle } from './invoice-template-size-toggle'
+import { InvoicePreviewFrame } from './invoice-preview-frame'
+import { InvoicePreviewToolbar } from './invoice-preview-toolbar'
+import { InvoiceTemplateSizeProvider } from './invoice-template-size-provider'
 import { useInvoiceTemplateSize } from '@/hooks/use-invoice-template-size'
-import {
-  getInvoiceFormat,
-  getInvoicePreviewMaxWidthClass,
-} from '@/lib/invoice-preview-scale'
+import { getInvoiceFormat } from '@/lib/invoice-preview-scale'
 import { generatePdf, generateImage } from '@/lib/pdf-generator'
-import { cn } from '@/lib/utils'
 import { useLanguage } from '@/hooks/use-language'
 import { toast } from '@/hooks/use-toast'
 import type { Invoice } from '@/types/invoice'
@@ -29,9 +28,9 @@ interface InvoicePdfProps {
   onOpenChange: (open: boolean) => void
 }
 
-export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
+function InvoicePdfContent({ invoice }: { invoice: Partial<Invoice> }) {
   const { t } = useLanguage()
-  const { templateSize, setTemplateSize } = useInvoiceTemplateSize()
+  const { templateSize } = useInvoiceTemplateSize()
   const previewRef = useRef<HTMLDivElement>(null)
   const [loading, setLoading] = useState<'pdf' | 'image' | null>(null)
 
@@ -74,16 +73,10 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] max-w-3xl flex-col gap-0 overflow-hidden p-0">
-        <DialogDescription className="sr-only">{t('invoice.previewInvoice')}</DialogDescription>
-        <DialogHeader className="flex shrink-0 flex-row items-center justify-between border-b border-border px-4 py-3 pe-12">
-          <DialogTitle>{t('invoice.previewInvoice')}</DialogTitle>
-        </DialogHeader>
-
-        <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-border bg-muted/30 px-4 py-3">
-          <InvoiceTemplateSizeToggle value={templateSize} onChange={setTemplateSize} />
-          <div className="ms-auto flex flex-wrap gap-2">
+    <>
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border bg-muted/30 px-4 py-2">
+        <InvoicePreviewToolbar className="min-w-0 flex-1 border-0 bg-transparent px-0 py-1" />
+        <div className="flex shrink-0 flex-wrap gap-2">
           <Button variant="default" size="sm" onClick={handleDownloadPdf} disabled={!!loading}>
             {loading === 'pdf' ? (
               <Loader2 className="h-4 w-4 animate-spin me-2" />
@@ -100,19 +93,34 @@ export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
             )}
             {t('invoice.downloadImage')}
           </Button>
-          </div>
         </div>
+      </div>
 
-        <div className="min-h-0 flex-1 overflow-auto bg-muted/20 p-4">
-          <div
-            className={cn(
-              'mx-auto overflow-hidden rounded-xl border border-border',
-              getInvoicePreviewMaxWidthClass(templateSize),
-            )}
-          >
-            <InvoicePreview ref={previewRef} invoice={invoice} templateSize={templateSize} />
-          </div>
-        </div>
+      <div className="min-h-0 flex-1 overflow-auto bg-muted/20 p-4">
+        <InvoicePreviewFrame>
+          <InvoicePreview ref={previewRef} invoice={invoice} />
+        </InvoicePreviewFrame>
+      </div>
+    </>
+  )
+}
+
+export function InvoicePdf({ invoice, open, onOpenChange }: InvoicePdfProps) {
+  const { t } = useLanguage()
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="flex max-h-[90vh] max-w-3xl flex-col gap-0 overflow-hidden p-0">
+        <DialogDescription className="sr-only">{t('invoice.previewInvoice')}</DialogDescription>
+        <DialogHeader className="flex shrink-0 flex-row items-center justify-between border-b border-border px-4 py-3 pe-12">
+          <DialogTitle>{t('invoice.previewInvoice')}</DialogTitle>
+        </DialogHeader>
+
+        <InvoiceTemplateSizeProvider>
+          <InvoiceAccentColorProvider>
+            <InvoicePdfContent invoice={invoice} />
+          </InvoiceAccentColorProvider>
+        </InvoiceTemplateSizeProvider>
       </DialogContent>
     </Dialog>
   )

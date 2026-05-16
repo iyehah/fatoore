@@ -139,7 +139,15 @@
     "templateSize": "Vorlagengröße",
     "templateSmall": "Beleg",
     "templateMedium": "Standard",
-    "templateLarge": "Voll"
+    "templateLarge": "Voll",
+    "accentColor": "Akzentfarbe",
+    "accentBlack": "Schwarz",
+    "accentBlue": "Blau",
+    "accentGreen": "Grün",
+    "accentOrange": "Orange",
+    "accentGray": "Grau",
+    "accentCustom": "Eigene Farbe",
+    "applyAccentToBorders": "Auf Rahmen anwenden"
   },
   "client": {
     "name": "Kunde",

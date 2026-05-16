@@ -139,7 +139,15 @@
     "templateSize": "Template size",
     "templateSmall": "Ticket",
     "templateMedium": "Standard",
-    "templateLarge": "Full"
+    "templateLarge": "Full",
+    "accentColor": "Accent color",
+    "accentBlack": "Black",
+    "accentBlue": "Blue",
+    "accentGreen": "Green",
+    "accentOrange": "Orange",
+    "accentGray": "Gray",
+    "accentCustom": "Custom color",
+    "applyAccentToBorders": "Apply to borders"
   },
   "client": {
     "name": "Client Name",
