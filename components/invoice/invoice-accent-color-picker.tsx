@@ -10,6 +10,8 @@ import {
 import { cn } from '@/lib/utils'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
 
 const PRESET_SWATCHES: Exclude<InvoiceAccentPreset, 'custom'>[] = [
   'black',
@@ -54,7 +56,7 @@ export function InvoiceAccentColorPicker({ className }: InvoiceAccentColorPicker
     >
       <div className="flex items-center gap-1.5">
         {PRESET_SWATCHES.map((key) => (
-          <button
+          <Button
             key={key}
             type="button"
             title={presetLabels[key]}
@@ -74,7 +76,7 @@ export function InvoiceAccentColorPicker({ className }: InvoiceAccentColorPicker
           />
         ))}
 
-        <button
+        <Button
           type="button"
           title={t('invoice.accentCustom')}
           aria-label={t('invoice.accentCustom')}
@@ -90,7 +92,7 @@ export function InvoiceAccentColorPicker({ className }: InvoiceAccentColorPicker
             className="block h-full w-full rounded-full border border-background shadow-sm"
             style={{ backgroundColor: customHex }}
           />
-          <input
+          <Input
             ref={colorInputRef}
             type="color"
             value={customHex}
@@ -98,7 +100,7 @@ export function InvoiceAccentColorPicker({ className }: InvoiceAccentColorPicker
             className="sr-only"
             tabIndex={-1}
           />
-        </button>
+        </Button>
       </div>
 
       <div className="flex items-center gap-2 border-s border-border ps-2">
