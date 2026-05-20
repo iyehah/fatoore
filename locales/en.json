@@ -194,6 +194,13 @@
         "autoRenew": "Auto-renew",
         "pricePerCycle": "Price per cycle",
         "nextPayment": "Next payment: {date}",
+        "nextPaymentDate": "Next payment",
+        "endDateSummary": "End date: {date}",
+        "milestoneRow": "Milestone {n}",
+        "installmentRowLabel": "Installment {n}",
+        "installmentColumn": "Installment",
+        "scheduleStartDate": "First due date",
+        "installmentInterval": "Interval",
         "serviceDescription": "Service description",
         "pricingModel": "Pricing model",
         "fixedAmount": "Fixed amount",
@@ -263,6 +270,12 @@
       "scheduleModes": {
         "count": "Equal installments",
         "custom": "Custom schedule"
+      },
+      "intervalUnits": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
       },
       "badges": {
         "autoRenew": "Auto-renew"

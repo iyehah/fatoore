@@ -96,6 +96,8 @@ function buildTypeData(
           installmentCount: v.installmentCount,
           interestOrFees: v.interestOrFees,
           paidAmount: v.paidAmount,
+          scheduleStartDate: v.scheduleStartDate,
+          installmentInterval: v.installmentInterval,
           installments: schedule,
         } satisfies InstallmentInvoiceData,
       }

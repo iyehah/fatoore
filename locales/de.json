@@ -179,6 +179,13 @@
         "autoRenew": "Auto-Verlängerung",
         "pricePerCycle": "Preis pro Zyklus",
         "nextPayment": "Nächste Zahlung: {date}",
+        "nextPaymentDate": "Nächste Zahlung",
+        "endDateSummary": "Enddatum: {date}",
+        "milestoneRow": "Meilenstein {n}",
+        "installmentRowLabel": "Rate {n}",
+        "installmentColumn": "Rate",
+        "scheduleStartDate": "Erstes Fälligkeitsdatum",
+        "installmentInterval": "Abstand",
         "serviceDescription": "Beschreibung",
         "pricingModel": "Preismodell",
         "fixedAmount": "Festbetrag",
@@ -229,6 +236,7 @@
       "bookingStatus": { "confirmed": "Bestätigt", "cancelled": "Storniert", "completed": "Abgeschlossen" },
       "installmentStatus": { "paid": "Bezahlt", "unpaid": "Offen", "partial": "Teilweise", "late": "Überfällig" },
       "scheduleModes": { "count": "Gleiche Raten", "custom": "Individuell" },
+      "intervalUnits": { "day": "Tag", "week": "Woche", "month": "Monat", "year": "Jahr" },
       "badges": { "autoRenew": "Auto-Verlängerung" }
     }
   },

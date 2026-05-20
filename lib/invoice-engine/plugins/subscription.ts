@@ -87,7 +87,7 @@ function coerceSubscriptionValues(merged: Record<string, unknown>): z.infer<type
     billingCycle,
     startDate: draftStr(merged.startDate, todayIso()),
     endDate: draftOptStr(merged.endDate),
-    autoRenew: Boolean(merged.autoRenew ?? true),
+    autoRenew: merged.autoRenew === true || merged.autoRenew === 'true',
     pricePerCycle: draftNum(merged.pricePerCycle),
     taxRate: draftNum(merged.taxRate),
     discount: draftNum(merged.discount),
@@ -118,6 +118,7 @@ export function calculateSubscription(values: Record<string, unknown>): Calculat
   const total = clampNonNegative(roundMoney(afterDiscount + taxAmount))
 
   const nextPayment = nextBillingDate(v.startDate, v.billingCycle)
+  const endDate = v.endDate || ''
 
   return {
     subtotal,
@@ -129,7 +130,17 @@ export function calculateSubscription(values: Record<string, unknown>): Calculat
       { labelKey: 'invoice.engine.fields.pricePerCycle', amount: subtotal },
       ...(discount > 0 ? [{ labelKey: 'invoice.discount', amount: discount, variant: 'discount' as const }] : []),
       ...(taxAmount > 0 ? [{ labelKey: 'invoice.tax', labelParams: { rate: v.taxRate ?? 0 }, amount: taxAmount }] : []),
-      { labelKey: 'invoice.engine.fields.nextPayment', labelParams: { date: nextPayment }, variant: 'muted' as const },
+      ...(v.autoRenew
+        ? [{ labelKey: 'invoice.engine.fields.nextPayment', labelParams: { date: nextPayment }, variant: 'muted' as const }]
+        : endDate
+          ? [
+              {
+                labelKey: 'invoice.engine.fields.endDateSummary',
+                labelParams: { date: endDate },
+                variant: 'muted' as const,
+              },
+            ]
+          : []),
     ],
     displayTables: [
       {
@@ -139,21 +150,21 @@ export function calculateSubscription(values: Record<string, unknown>): Calculat
           { key: 'plan', labelKey: 'invoice.engine.fields.planName' },
           { key: 'cycle', labelKey: 'invoice.engine.fields.billingCycle' },
           { key: 'start', labelKey: 'invoice.engine.fields.startDate' },
-          { key: 'next', labelKey: 'invoice.engine.fields.nextPayment' },
+          v.autoRenew
+            ? { key: 'next', labelKey: 'invoice.engine.fields.nextPaymentDate' }
+            : { key: 'end', labelKey: 'invoice.engine.fields.endDate' },
         ],
         rows: [
           {
             plan: v.planName,
             cycle: v.billingCycle,
             start: v.startDate,
-            next: nextPayment,
+            ...(v.autoRenew ? { next: nextPayment } : { end: endDate }),
           },
         ],
       },
     ],
-    badges: v.autoRenew
-      ? [{ labelKey: 'invoice.engine.badges.autoRenew', variant: 'success' }]
-      : [],
+    badges: v.autoRenew ? [{ labelKey: 'invoice.engine.badges.autoRenew', variant: 'success' }] : [],
   }
 }
 

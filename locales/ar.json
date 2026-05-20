@@ -179,6 +179,13 @@
         "autoRenew": "تجديد تلقائي",
         "pricePerCycle": "السعر لكل دورة",
         "nextPayment": "الدفعة القادمة: {date}",
+        "nextPaymentDate": "الدفعة القادمة",
+        "endDateSummary": "تاريخ النهاية: {date}",
+        "milestoneRow": "مرحلة {n}",
+        "installmentRowLabel": "قسط {n}",
+        "installmentColumn": "قسط",
+        "scheduleStartDate": "تاريخ أول استحقاق",
+        "installmentInterval": "الفترة بين الأقساط",
         "serviceDescription": "وصف الخدمة",
         "pricingModel": "نموذج التسعير",
         "fixedAmount": "مبلغ ثابت",
@@ -229,6 +236,7 @@
       "bookingStatus": { "confirmed": "مؤكد", "cancelled": "ملغى", "completed": "مكتمل" },
       "installmentStatus": { "paid": "مدفوع", "unpaid": "غير مدفوع", "partial": "جزئي", "late": "متأخر" },
       "scheduleModes": { "count": "أقساط متساوية", "custom": "جدول مخصص" },
+      "intervalUnits": { "day": "يوم", "week": "أسبوع", "month": "شهر", "year": "سنة" },
       "badges": { "autoRenew": "تجديد تلقائي" }
     }
   },

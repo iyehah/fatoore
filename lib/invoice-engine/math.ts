@@ -31,6 +31,30 @@ export function addMonths(isoDate: string, months: number): string {
   return d.toISOString().slice(0, 10)
 }
 
+export function addDays(isoDate: string, days: number): string {
+  const d = new Date(isoDate)
+  if (Number.isNaN(d.getTime())) return isoDate
+  d.setDate(d.getDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
+export function addInterval(
+  isoDate: string,
+  index: number,
+  unit: 'day' | 'week' | 'month' | 'year',
+): string {
+  switch (unit) {
+    case 'day':
+      return addDays(isoDate, index)
+    case 'week':
+      return addWeeks(isoDate, index)
+    case 'year':
+      return addYears(isoDate, index)
+    default:
+      return addMonths(isoDate, index)
+  }
+}
+
 export function addWeeks(isoDate: string, weeks: number): string {
   const d = new Date(isoDate)
   if (Number.isNaN(d.getTime())) return isoDate

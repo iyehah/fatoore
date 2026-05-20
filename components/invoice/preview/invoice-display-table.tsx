@@ -24,7 +24,7 @@ function formatCell(
   ) {
     return formatCurrency(Number(value), currency)
   }
-  if (key === 'start' || key === 'next' || key === 'dueDate') {
+  if (key === 'start' || key === 'next' || key === 'end' || key === 'dueDate') {
     const s = String(value)
     if (/^\d{4}-\d{2}-\d{2}/.test(s)) return formatDate(s)
     return s
@@ -70,7 +70,11 @@ export function InvoiceDisplayTableView({ table, invoice }: InvoiceDisplayTableP
                     ? t(`invoice.engine.cycles.${raw}`)
                     : col.key === 'status' && typeof raw === 'string'
                       ? t(`invoice.engine.installmentStatus.${raw}`)
-                      : formatCell(col.key, raw ?? '', currency)
+                      : col.key === 'milestone' && typeof raw === 'number'
+                        ? t('invoice.engine.fields.milestoneRow', { n: raw })
+                        : col.key === 'installment' && typeof raw === 'number'
+                          ? t('invoice.engine.fields.installmentRowLabel', { n: raw })
+                          : formatCell(col.key, raw ?? '', currency)
                 return (
                   <td
                     key={col.key}

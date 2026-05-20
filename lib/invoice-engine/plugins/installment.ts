@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { customerFieldDefaults, customerFieldsZod, coerceCustomerFields } from '../customer-fields'
 import { draftNum, draftOptStr, draftStr, pickForCalculation, todayIso } from '../coerce-draft'
 import { applyPaidAmountToSchedule, sumPaidFromSchedule } from '../installment-schedule'
-import { clampNonNegative, roundMoney, splitEqual } from '../math'
+import { addInterval, clampNonNegative, roundMoney, splitEqual } from '../math'
 import type { CalculationResult, FormSectionSchema } from '../types'
 import type { InstallmentRow } from '@/types/invoice'
 import { customerSection, paymentSection } from '../shared-fields'
@@ -22,6 +22,8 @@ export const installmentZodSchema = z.object({
   totalAmount: z.coerce.number().min(0),
   scheduleMode: z.enum(['count', 'custom']),
   installmentCount: z.coerce.number().min(1).max(60).optional(),
+  scheduleStartDate: z.string().optional(),
+  installmentInterval: z.enum(['day', 'week', 'month', 'year']).optional(),
   interestOrFees: z.coerce.number().min(0).optional(),
   paidAmount: z.coerce.number().min(0).optional(),
   installments: z.array(installmentRowSchema).optional(),
@@ -46,6 +48,25 @@ export const installmentSections: FormSectionSchema[] = [
         options: [
           { value: 'count', labelKey: 'invoice.engine.scheduleModes.count' },
           { value: 'custom', labelKey: 'invoice.engine.scheduleModes.custom' },
+        ],
+      },
+      {
+        id: 'scheduleStartDate',
+        type: 'date',
+        labelKey: 'invoice.engine.fields.scheduleStartDate',
+        visibleWhen: { field: 'scheduleMode', equals: 'count' },
+      },
+      {
+        id: 'installmentInterval',
+        type: 'select',
+        labelKey: 'invoice.engine.fields.installmentInterval',
+        visibleWhen: { field: 'scheduleMode', equals: 'count' },
+        defaultValue: 'month',
+        options: [
+          { value: 'day', labelKey: 'invoice.engine.intervalUnits.day' },
+          { value: 'week', labelKey: 'invoice.engine.intervalUnits.week' },
+          { value: 'month', labelKey: 'invoice.engine.intervalUnits.month' },
+          { value: 'year', labelKey: 'invoice.engine.intervalUnits.year' },
         ],
       },
       {
@@ -100,6 +121,7 @@ export const installmentSections: FormSectionSchema[] = [
             labelKey: 'invoice.engine.fields.paidColumn',
             min: 0,
             defaultValue: 0,
+            visibleWhen: { field: 'status', equals: 'partial' },
           },
         ],
       },
@@ -115,6 +137,8 @@ export const installmentDefaultValues: Record<string, unknown> = {
   clientAddress: '',
   totalAmount: 0,
   scheduleMode: 'count',
+  scheduleStartDate: new Date().toISOString().slice(0, 10),
+  installmentInterval: 'month',
   installmentCount: 3,
   paidAmount: 0,
   interestOrFees: 0,
@@ -132,13 +156,18 @@ function buildEqualSchedule(values: InstallmentCalcInput): Omit<InstallmentRow, 
   const grand = roundMoney(values.totalAmount + fees)
   const count = values.installmentCount ?? 3
   const parts = splitEqual(grand, count)
-  const start = values.dueDate || todayIso()
+  const start = values.scheduleStartDate || values.dueDate || todayIso()
+  const interval =
+    values.installmentInterval === 'day' ||
+    values.installmentInterval === 'week' ||
+    values.installmentInterval === 'year'
+      ? values.installmentInterval
+      : 'month'
 
-  const base = parts.map((amount, i) => {
-    const d = new Date(start)
-    d.setMonth(d.getMonth() + i)
-    return { amount, dueDate: d.toISOString().slice(0, 10) }
-  })
+  const base = parts.map((amount, i) => ({
+    amount,
+    dueDate: addInterval(start, i, interval),
+  }))
 
   return applyPaidAmountToSchedule(base, values.paidAmount ?? 0)
 }
@@ -190,6 +219,13 @@ function coerceInstallmentValues(merged: Record<string, unknown>): InstallmentCa
     totalAmount: draftNum(merged.totalAmount),
     scheduleMode,
     installmentCount: Math.max(1, Math.min(60, Math.round(draftNum(merged.installmentCount, 3)))),
+    scheduleStartDate: draftStr(merged.scheduleStartDate, todayIso()),
+    installmentInterval:
+      merged.installmentInterval === 'day' ||
+      merged.installmentInterval === 'week' ||
+      merged.installmentInterval === 'year'
+        ? merged.installmentInterval
+        : 'month',
     interestOrFees: draftNum(merged.interestOrFees),
     paidAmount: draftNum(merged.paidAmount),
     installments,
@@ -233,12 +269,14 @@ export function calculateInstallment(values: Record<string, unknown>): Calculati
         id: 'installments',
         titleKey: 'invoice.engine.sections.installment',
         columns: [
+          { key: 'installment', labelKey: 'invoice.engine.fields.installmentColumn' },
           { key: 'dueDate', labelKey: 'invoice.dueDate' },
           { key: 'amount', labelKey: 'invoice.amount', align: 'end' },
           { key: 'paid', labelKey: 'invoice.engine.fields.paidColumn', align: 'end' },
           { key: 'status', labelKey: 'invoice.engine.fields.installmentStatus', align: 'center' },
         ],
-        rows: schedule.map((r) => ({
+        rows: schedule.map((r, i) => ({
+          installment: i + 1,
           dueDate: r.dueDate,
           amount: r.amount,
           paid: r.paidAmount ?? (r.status === 'paid' ? r.amount : 0),

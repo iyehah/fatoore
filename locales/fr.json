@@ -179,6 +179,13 @@
         "autoRenew": "Renouvellement auto",
         "pricePerCycle": "Prix par cycle",
         "nextPayment": "Prochain paiement : {date}",
+        "nextPaymentDate": "Prochain paiement",
+        "endDateSummary": "Date de fin : {date}",
+        "milestoneRow": "Jalon {n}",
+        "installmentRowLabel": "Échéance {n}",
+        "installmentColumn": "Échéance",
+        "scheduleStartDate": "Première échéance",
+        "installmentInterval": "Intervalle",
         "serviceDescription": "Description",
         "pricingModel": "Modèle de prix",
         "fixedAmount": "Montant fixe",
@@ -229,6 +236,7 @@
       "bookingStatus": { "confirmed": "Confirmé", "cancelled": "Annulé", "completed": "Terminé" },
       "installmentStatus": { "paid": "Payé", "unpaid": "Impayé", "partial": "Partiel", "late": "En retard" },
       "scheduleModes": { "count": "Échéances égales", "custom": "Personnalisé" },
+      "intervalUnits": { "day": "Jour", "week": "Semaine", "month": "Mois", "year": "An" },
       "badges": { "autoRenew": "Renouvellement auto" }
     }
   },

@@ -93,6 +93,8 @@ export interface InstallmentInvoiceData {
   totalAmount: number
   scheduleMode: 'count' | 'custom'
   installmentCount?: number
+  scheduleStartDate?: string
+  installmentInterval?: 'day' | 'week' | 'month' | 'year'
   interestOrFees?: number
   /** Total paid so far (equal-installment mode allocates across rows). */
   paidAmount?: number

@@ -81,14 +81,7 @@ export function InvoiceBuilder({
   }, [draft, selectedBusiness])
 
   const handleValuesChange = useCallback((next: Record<string, unknown>) => {
-    setValues((prev) => {
-      try {
-        if (JSON.stringify(prev) === JSON.stringify(next)) return prev
-      } catch {
-        /* ignore */
-      }
-      return next
-    })
+    setValues({ ...next })
   }, [])
 
   const handleFormSubmit = useCallback(() => {

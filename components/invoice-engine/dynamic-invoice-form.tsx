@@ -25,7 +25,7 @@ import { getPlugin } from '@/lib/invoice-engine/registry'
 import { getZodResolver } from '@/lib/invoice-engine/validation'
 import type { FieldSchema } from '@/lib/invoice-engine/types'
 import type { InvoiceType } from '@/types/invoice'
-import { filterVisibleFields } from './field-visibility'
+import { filterVisibleFields, isFieldVisible } from './field-visibility'
 import { CustomerSectionFields } from './customer-section-fields'
 import { cn } from '@/lib/utils'
 
@@ -59,11 +59,8 @@ export function DynamicInvoiceForm({
   onValuesChangeRef.current = onValuesChange
 
   useEffect(() => {
-    const subscription = watch((data) => {
-      onValuesChangeRef.current(data as Record<string, unknown>)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch])
+    onValuesChangeRef.current((watched ?? {}) as Record<string, unknown>)
+  }, [watched])
 
   return (
     <form
@@ -389,8 +386,15 @@ function ArrayField({
 }) {
   const { fields, append, remove } = useFieldArray({ control, name: field.id })
   const itemFields = field.itemFields ?? []
-  const itemLabel = field.itemLabelKey ? t(field.itemLabelKey) : t('invoice.item')
   const isInstallment = field.id === 'installments'
+  const isMilestone = field.id === 'milestones'
+
+  const rowLabel = (index: number) => {
+    if (isMilestone) return t('invoice.engine.fields.milestoneRow', { n: index + 1 })
+    if (isInstallment) return t('invoice.engine.fields.installmentRowLabel', { n: index + 1 })
+    if (field.itemLabelKey) return `${t(field.itemLabelKey)} ${index + 1}`
+    return `${t('invoice.item')} ${index + 1}`
+  }
 
   return (
     <div className="space-y-3">
@@ -419,90 +423,133 @@ function ArrayField({
         </Button>
       </div>
       {fields.map((row, index) => (
-        <div
+        <ArrayRow
           key={row.id}
-          className={cn(
-            'grid gap-3 rounded-xl border border-dashed border-border/80 p-3',
-            isInstallment ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4' : 'sm:grid-cols-12',
-          )}
-        >
-          <p
-            className={cn(
-              'text-xs font-medium text-muted-foreground',
-              isInstallment ? 'col-span-full' : 'sm:col-span-12',
-            )}
-          >
-            {itemLabel} {index + 1}
-          </p>
-          {itemFields.map((sub) => {
-            const name = `${field.id}.${index}.${sub.id}`
-            return (
-              <ArraySubCell key={sub.id} sub={sub} isInstallment={isInstallment}>
-                <Label className="text-xs">{t(sub.labelKey)}</Label>
-                {sub.type === 'select' ? (
-                  <Controller
-                    name={name}
-                    control={control}
-                    render={({ field: f }) => (
-                      <Select
-                        value={
-                          f.value != null && String(f.value) !== '' ? String(f.value) : undefined
-                        }
-                        onValueChange={f.onChange}
-                      >
-                        <SelectTrigger className="h-9 w-full">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sub.options?.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              {t(opt.labelKey)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                ) : sub.type === 'date' ? (
-                  <DateField
-                    id={name}
-                    control={control}
-                    language={language}
-                    pickLabel={t('invoice.pickDueDate')}
-                  />
-                ) : sub.type === 'textarea' ? (
-                  <Textarea className="min-h-[72px]" {...register(name)} />
-                ) : sub.type === 'number' || sub.type === 'currency' ? (
-                  <Input
-                    type="number"
-                    min={sub.min}
-                    step={sub.type === 'currency' ? 0.01 : 1}
-                    dir="ltr"
-                    className="h-9"
-                    {...register(name, { valueAsNumber: true })}
-                  />
-                ) : (
-                  <Input className="h-9" {...register(name)} />
-                )}
-              </ArraySubCell>
-            )
-          })}
-          <div
-            className={cn('flex items-end justify-end', isInstallment ? 'col-span-full' : 'sm:col-span-1')}
-          >
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              disabled={fields.length <= 1}
-              onClick={() => remove(index)}
-              aria-label={t('invoice.removeItem')}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+          field={field}
+          index={index}
+          itemFields={itemFields}
+          control={control}
+          register={register}
+          t={t}
+          language={language}
+          isInstallment={isInstallment}
+          rowLabel={rowLabel(index)}
+          onRemove={() => remove(index)}
+          canRemove={fields.length > 1}
+        />
       ))}
+    </div>
+  )
+}
+
+function ArrayRow({
+  field,
+  index,
+  itemFields,
+  control,
+  register,
+  t,
+  language,
+  isInstallment,
+  rowLabel,
+  onRemove,
+  canRemove,
+}: {
+  field: FieldSchema
+  index: number
+  itemFields: FieldSchema[]
+  control: ReturnType<typeof useForm>['control']
+  register: ReturnType<typeof useForm>['register']
+  t: (key: string) => string
+  language: string
+  isInstallment: boolean
+  rowLabel: string
+  onRemove: () => void
+  canRemove: boolean
+}) {
+  const rowValues = (useWatch({ control, name: `${field.id}.${index}` }) ?? {}) as Record<string, unknown>
+
+  return (
+    <div
+      className={cn(
+        'grid gap-3 rounded-xl border border-dashed border-border/80 p-3',
+        isInstallment ? 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4' : 'sm:grid-cols-12',
+      )}
+    >
+      <p
+        className={cn(
+          'text-xs font-medium text-muted-foreground',
+          isInstallment ? 'col-span-full' : 'sm:col-span-12',
+        )}
+      >
+        {rowLabel}
+      </p>
+      {itemFields.map((sub) => {
+        const name = `${field.id}.${index}.${sub.id}`
+        if (!isFieldVisible(sub.visibleWhen, {}, rowValues)) return null
+        return (
+          <ArraySubCell key={sub.id} sub={sub} isInstallment={isInstallment}>
+            <Label className="text-xs">{t(sub.labelKey)}</Label>
+            {sub.type === 'select' ? (
+              <Controller
+                name={name}
+                control={control}
+                render={({ field: f }) => (
+                  <Select
+                    value={f.value != null && String(f.value) !== '' ? String(f.value) : undefined}
+                    onValueChange={f.onChange}
+                  >
+                    <SelectTrigger className="h-9 w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {sub.options?.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {t(opt.labelKey)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            ) : sub.type === 'date' ? (
+              <DateField
+                id={name}
+                control={control}
+                language={language}
+                pickLabel={t('invoice.pickDueDate')}
+              />
+            ) : sub.type === 'textarea' ? (
+              <Textarea className="min-h-[72px]" {...register(name)} />
+            ) : sub.type === 'number' || sub.type === 'currency' ? (
+              <Input
+                type="number"
+                min={sub.min}
+                step={sub.type === 'currency' ? 0.01 : 1}
+                dir="ltr"
+                className="h-9"
+                {...register(name, { valueAsNumber: true })}
+              />
+            ) : (
+              <Input className="h-9" {...register(name)} />
+            )}
+          </ArraySubCell>
+        )
+      })}
+      <div
+        className={cn('flex items-end justify-end', isInstallment ? 'col-span-full' : 'sm:col-span-1')}
+      >
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          disabled={!canRemove}
+          onClick={onRemove}
+          aria-label={t('invoice.removeItem')}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   )
 }

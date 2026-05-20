@@ -6,7 +6,7 @@ import type { CalculationResult, FormSectionSchema } from '../types'
 import { customerSection, paymentSection, totalsSection } from '../shared-fields'
 
 const milestoneSchema = z.object({
-  title: z.string().min(1),
+  title: z.string().optional().default(''),
   amount: z.coerce.number().min(0),
 })
 
@@ -80,7 +80,7 @@ export const serviceSections: FormSectionSchema[] = [
         type: 'array',
         labelKey: 'invoice.engine.fields.milestones',
         visibleWhen: { field: 'pricingModel', equals: 'milestone' },
-        itemLabelKey: 'invoice.engine.fields.milestoneRowLabel',
+        itemLabelKey: 'invoice.engine.fields.milestoneRow',
         itemFields: [
           { id: 'title', type: 'text', labelKey: 'invoice.engine.fields.milestoneName', required: true },
           { id: 'amount', type: 'currency', labelKey: 'invoice.amount', required: true, min: 0 },
@@ -203,7 +203,7 @@ function buildServiceDisplayTable(v: ServiceCalcValues) {
       { key: 'amount', labelKey: 'invoice.amount', align: 'end' as const },
     ],
     rows: milestones.map((m, i) => ({
-      milestone: `Milestone ${i + 1}`,
+      milestone: i + 1,
       name: m.title || '—',
       amount: m.amount,
     })),

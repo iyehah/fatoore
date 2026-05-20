@@ -179,6 +179,13 @@
         "autoRenew": "Renovação automática",
         "pricePerCycle": "Preço por ciclo",
         "nextPayment": "Próximo pagamento: {date}",
+        "nextPaymentDate": "Próximo pagamento",
+        "endDateSummary": "Data de fim: {date}",
+        "milestoneRow": "Marco {n}",
+        "installmentRowLabel": "Prestação {n}",
+        "installmentColumn": "Prestação",
+        "scheduleStartDate": "Primeiro vencimento",
+        "installmentInterval": "Intervalo",
         "serviceDescription": "Descrição",
         "pricingModel": "Modelo de preço",
         "fixedAmount": "Valor fixo",
@@ -229,6 +236,7 @@
       "bookingStatus": { "confirmed": "Confirmado", "cancelled": "Cancelado", "completed": "Concluído" },
       "installmentStatus": { "paid": "Pago", "unpaid": "Por pagar", "partial": "Parcial", "late": "Atrasado" },
       "scheduleModes": { "count": "Parcelas iguais", "custom": "Personalizado" },
+      "intervalUnits": { "day": "Dia", "week": "Semana", "month": "Mês", "year": "Ano" },
       "badges": { "autoRenew": "Renovação automática" }
     }
   },
