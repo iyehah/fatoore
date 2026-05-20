@@ -6,7 +6,9 @@ import { useLanguage } from '@/hooks/use-language'
 import { formatDate } from '@/lib/invoice-utils'
 import type { Invoice } from '@/types/invoice'
 import Logo from '@/components/logo'
+import { shouldShowInvoiceQr } from '@/lib/invoice-qr'
 import { InvoiceBadge } from './invoice-badge'
+import { InvoiceFooterQr } from './invoice-footer-qr'
 interface InvoicePreviewShellProps {
   invoice: Partial<Invoice>
   children: React.ReactNode
@@ -85,11 +87,16 @@ export function InvoicePreviewShell({ invoice, children }: InvoicePreviewShellPr
       {children}
 
       <footer className="invoice-footer">
-        <p className="invoice-footer__thanks">{t('invoice.thankYou')}</p>
-        <div className="invoice-footer__brand">
-          <Link href="https://fatoore.vercel.app" draggable={false}>
-            <Logo size="small" />
-          </Link>
+        <div className="invoice-footer__inner">
+          <div className="invoice-footer__main">
+            <p className="invoice-footer__thanks">{t('invoice.thankYou')}</p>
+            <div className="invoice-footer__brand">
+              <Link href="https://fatoore.vercel.app" draggable={false}>
+                <Logo size="small" />
+              </Link>
+            </div>
+          </div>
+          {shouldShowInvoiceQr(invoice) ? <InvoiceFooterQr invoice={invoice} /> : null}
         </div>
       </footer>
     </>

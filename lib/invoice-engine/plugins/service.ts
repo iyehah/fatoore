@@ -3,7 +3,14 @@ import { customerFieldDefaults, customerFieldsZod, coerceCustomerFields } from '
 import { draftNum, draftOptStr, draftStr, pickForCalculation } from '../coerce-draft'
 import { applyDiscount, applyTax, clampNonNegative, roundMoney } from '../math'
 import type { CalculationResult, FormSectionSchema } from '../types'
-import { customerSection, paymentSection, totalsSection } from '../shared-fields'
+import {
+  coercePaymentFields,
+  customerSection,
+  paymentFieldDefaults,
+  paymentFieldsZod,
+  paymentSection,
+  totalsSection,
+} from '../shared-fields'
 
 const milestoneSchema = z.object({
   title: z.string().optional().default(''),
@@ -23,10 +30,7 @@ export const serviceZodSchema = z.object({
   milestones: z.array(milestoneSchema).optional(),
   taxRate: z.coerce.number().min(0).max(100).optional(),
   discount: z.coerce.number().min(0).optional(),
-  paymentMethod: z.string().optional(),
-  paymentDetails: z.string().optional(),
-  notes: z.string().optional(),
-  dueDate: z.string().optional(),
+  ...paymentFieldsZod,
 })
 
 export const serviceSections: FormSectionSchema[] = [
@@ -105,10 +109,7 @@ export const serviceDefaultValues: Record<string, unknown> = {
   milestones: [{ title: '', amount: 0 }],
   taxRate: 0,
   discount: 0,
-  paymentMethod: '',
-  paymentDetails: '',
-  notes: '',
-  dueDate: '',
+  ...paymentFieldDefaults,
 }
 
 type ServiceCalcValues = z.infer<typeof serviceZodSchema>
@@ -138,10 +139,7 @@ function coerceServiceValues(merged: Record<string, unknown>): ServiceCalcValues
     milestones,
     taxRate: draftNum(merged.taxRate),
     discount: draftNum(merged.discount),
-    paymentMethod: draftOptStr(merged.paymentMethod),
-    paymentDetails: draftOptStr(merged.paymentDetails),
-    notes: draftOptStr(merged.notes),
-    dueDate: draftOptStr(merged.dueDate),
+    ...coercePaymentFields(merged),
   }
 }
 

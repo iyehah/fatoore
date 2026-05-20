@@ -5,7 +5,13 @@ import { applyPaidAmountToSchedule, sumPaidFromSchedule } from '../installment-s
 import { addInterval, clampNonNegative, roundMoney, splitEqual } from '../math'
 import type { CalculationResult, FormSectionSchema } from '../types'
 import type { InstallmentRow } from '@/types/invoice'
-import { customerSection, paymentSection } from '../shared-fields'
+import {
+  coercePaymentFields,
+  customerSection,
+  paymentFieldDefaults,
+  paymentFieldsZod,
+  paymentSection,
+} from '../shared-fields'
 
 const installmentRowSchema = z.object({
   amount: z.coerce.number().min(0),
@@ -27,10 +33,7 @@ export const installmentZodSchema = z.object({
   interestOrFees: z.coerce.number().min(0).optional(),
   paidAmount: z.coerce.number().min(0).optional(),
   installments: z.array(installmentRowSchema).optional(),
-  paymentMethod: z.string().optional(),
-  paymentDetails: z.string().optional(),
-  notes: z.string().optional(),
-  dueDate: z.string().optional(),
+  ...paymentFieldsZod,
 })
 
 export const installmentSections: FormSectionSchema[] = [
@@ -143,10 +146,7 @@ export const installmentDefaultValues: Record<string, unknown> = {
   paidAmount: 0,
   interestOrFees: 0,
   installments: [{ amount: 0, dueDate: new Date().toISOString().slice(0, 10), status: 'unpaid' }],
-  paymentMethod: '',
-  paymentDetails: '',
-  notes: '',
-  dueDate: '',
+  ...paymentFieldDefaults,
 }
 
 type InstallmentCalcInput = z.infer<typeof installmentZodSchema>
@@ -229,10 +229,7 @@ function coerceInstallmentValues(merged: Record<string, unknown>): InstallmentCa
     interestOrFees: draftNum(merged.interestOrFees),
     paidAmount: draftNum(merged.paidAmount),
     installments,
-    paymentMethod: draftOptStr(merged.paymentMethod),
-    paymentDetails: draftOptStr(merged.paymentDetails),
-    notes: draftOptStr(merged.notes),
-    dueDate: draftOptStr(merged.dueDate),
+    ...coercePaymentFields(merged),
   }
 }
 

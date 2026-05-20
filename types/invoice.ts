@@ -141,6 +141,8 @@ export interface InvoiceBase {
   paymentMethod?: string
   paymentDetails?: string
   notes?: string
+  /** When false, hides the footer QR code. Defaults to true. */
+  showQrCode?: boolean
   userId: string
   currency: string
   summaryLines?: InvoiceSummaryLine[]

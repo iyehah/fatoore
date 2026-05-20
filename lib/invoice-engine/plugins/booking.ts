@@ -3,7 +3,13 @@ import { customerFieldDefaults, customerFieldsZod, coerceCustomerFields } from '
 import { draftNum, draftOptStr, draftStr, pickForCalculation, todayIso } from '../coerce-draft'
 import { clampNonNegative, roundMoney } from '../math'
 import type { CalculationResult, FormSectionSchema } from '../types'
-import { customerSection, paymentSection } from '../shared-fields'
+import {
+  coercePaymentFields,
+  customerSection,
+  paymentFieldDefaults,
+  paymentFieldsZod,
+  paymentSection,
+} from '../shared-fields'
 
 export const bookingZodSchema = z.object({
   ...customerFieldsZod,
@@ -17,10 +23,7 @@ export const bookingZodSchema = z.object({
   deposit: z.coerce.number().min(0),
   totalPrice: z.coerce.number().min(0),
   bookingStatus: z.enum(['confirmed', 'cancelled', 'completed']),
-  paymentMethod: z.string().optional(),
-  paymentDetails: z.string().optional(),
-  notes: z.string().optional(),
-  dueDate: z.string().optional(),
+  ...paymentFieldsZod,
 })
 
 export const bookingSections: FormSectionSchema[] = [
@@ -63,10 +66,7 @@ export const bookingDefaultValues: Record<string, unknown> = {
   deposit: 0,
   totalPrice: 0,
   bookingStatus: 'confirmed',
-  paymentMethod: '',
-  paymentDetails: '',
-  notes: '',
-  dueDate: '',
+  ...paymentFieldDefaults,
 }
 
 function coerceBookingValues(merged: Record<string, unknown>): z.infer<typeof bookingZodSchema> {
@@ -87,10 +87,7 @@ function coerceBookingValues(merged: Record<string, unknown>): z.infer<typeof bo
     deposit: draftNum(merged.deposit),
     totalPrice: draftNum(merged.totalPrice),
     bookingStatus,
-    paymentMethod: draftOptStr(merged.paymentMethod),
-    paymentDetails: draftOptStr(merged.paymentDetails),
-    notes: draftOptStr(merged.notes),
-    dueDate: draftOptStr(merged.dueDate),
+    ...coercePaymentFields(merged),
   }
 }
 

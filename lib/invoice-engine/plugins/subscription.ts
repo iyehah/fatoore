@@ -3,7 +3,14 @@ import { customerFieldDefaults, customerFieldsZod, coerceCustomerFields } from '
 import { draftNum, draftOptStr, draftStr, pickForCalculation, todayIso } from '../coerce-draft'
 import { applyDiscount, applyTax, clampNonNegative, nextBillingDate, roundMoney } from '../math'
 import type { CalculationResult, FormSectionSchema, InvoiceTypePlugin } from '../types'
-import { customerSection, paymentSection, totalsSection } from '../shared-fields'
+import {
+  coercePaymentFields,
+  customerSection,
+  paymentFieldDefaults,
+  paymentFieldsZod,
+  paymentSection,
+  totalsSection,
+} from '../shared-fields'
 
 export const subscriptionZodSchema = z.object({
   ...customerFieldsZod,
@@ -18,10 +25,7 @@ export const subscriptionZodSchema = z.object({
   pricePerCycle: z.coerce.number().min(0),
   taxRate: z.coerce.number().min(0).max(100).optional(),
   discount: z.coerce.number().min(0).optional(),
-  paymentMethod: z.string().optional(),
-  paymentDetails: z.string().optional(),
-  notes: z.string().optional(),
-  dueDate: z.string().optional(),
+  ...paymentFieldsZod,
 })
 
 export const subscriptionSections: FormSectionSchema[] = [
@@ -66,10 +70,7 @@ export const subscriptionDefaultValues: Record<string, unknown> = {
   pricePerCycle: 0,
   taxRate: 0,
   discount: 0,
-  paymentMethod: '',
-  paymentDetails: '',
-  notes: '',
-  dueDate: '',
+  ...paymentFieldDefaults,
 }
 
 function coerceSubscriptionValues(merged: Record<string, unknown>): z.infer<typeof subscriptionZodSchema> {
@@ -91,10 +92,7 @@ function coerceSubscriptionValues(merged: Record<string, unknown>): z.infer<type
     pricePerCycle: draftNum(merged.pricePerCycle),
     taxRate: draftNum(merged.taxRate),
     discount: draftNum(merged.discount),
-    paymentMethod: draftOptStr(merged.paymentMethod),
-    paymentDetails: draftOptStr(merged.paymentDetails),
-    notes: draftOptStr(merged.notes),
-    dueDate: draftOptStr(merged.dueDate),
+    ...coercePaymentFields(merged),
   }
 }
 

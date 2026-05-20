@@ -136,6 +136,7 @@
     "paymentDetailsPlaceholder": "Account number, phone, or other payment instructions",
     "pickDueDate": "Select due date",
     "thankYou": "Thank you for your business.",
+    "showQrCode": "Show QR code on invoice",
     "templateSize": "Template size",
     "templateSmall": "Ticket",
     "templateMedium": "Standard",

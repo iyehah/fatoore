@@ -136,6 +136,7 @@
     "paymentDetailsPlaceholder": "Numéro de compte, téléphone ou instructions de paiement",
     "pickDueDate": "Choisir la date d’échéance",
     "thankYou": "Merci pour votre confiance.",
+    "showQrCode": "Afficher le code QR sur la facture",
     "templateSize": "Taille du modèle",
     "templateSmall": "Ticket",
     "templateMedium": "Standard",

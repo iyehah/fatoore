@@ -136,6 +136,7 @@
     "paymentDetailsPlaceholder": "Número de conta, telefone ou outras instruções de pagamento",
     "pickDueDate": "Selecionar data de vencimento",
     "thankYou": "Obrigado pela sua preferência.",
+    "showQrCode": "Mostrar código QR na fatura",
     "templateSize": "Tamanho do modelo",
     "templateSmall": "Recibo",
     "templateMedium": "Padrão",

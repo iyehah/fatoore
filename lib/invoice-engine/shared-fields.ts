@@ -1,4 +1,33 @@
+import { z } from 'zod'
 import type { FormSectionSchema } from './types'
+
+export const paymentFieldDefaults = {
+  paymentMethod: '',
+  paymentDetails: '',
+  notes: '',
+  dueDate: '',
+  showQrCode: true,
+} as const
+
+export const paymentFieldsZod = {
+  paymentMethod: z.string().optional(),
+  paymentDetails: z.string().optional(),
+  notes: z.string().optional(),
+  dueDate: z.string().optional(),
+  showQrCode: z.boolean().optional(),
+}
+
+export function coercePaymentFields(merged: Record<string, unknown>) {
+  return {
+    paymentMethod:
+      typeof merged.paymentMethod === 'string' ? merged.paymentMethod : paymentFieldDefaults.paymentMethod,
+    paymentDetails:
+      typeof merged.paymentDetails === 'string' ? merged.paymentDetails : paymentFieldDefaults.paymentDetails,
+    notes: typeof merged.notes === 'string' ? merged.notes : paymentFieldDefaults.notes,
+    dueDate: typeof merged.dueDate === 'string' ? merged.dueDate : paymentFieldDefaults.dueDate,
+    showQrCode: merged.showQrCode !== false,
+  }
+}
 
 export const customerSection: FormSectionSchema = {
   id: 'customer',
@@ -27,6 +56,13 @@ export const paymentSection: FormSectionSchema = {
     { id: 'paymentDetails', type: 'textarea', labelKey: 'invoice.paymentDetails', colSpan: 2 },
     { id: 'dueDate', type: 'date', labelKey: 'invoice.dueDate' },
     { id: 'notes', type: 'textarea', labelKey: 'invoice.notes', colSpan: 2 },
+    {
+      id: 'showQrCode',
+      type: 'switch',
+      labelKey: 'invoice.showQrCode',
+      defaultValue: true,
+      colSpan: 2,
+    },
   ],
 }
 

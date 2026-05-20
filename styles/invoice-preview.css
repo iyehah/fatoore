@@ -443,6 +443,18 @@
   margin-top: auto;
   padding-top: var(--inv-gap-md);
   border-top: 1px dashed var(--inv-border-strong);
+}
+
+.invoice-footer__inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--inv-gap-md);
+}
+
+.invoice-footer__main {
+  flex: 1;
+  min-width: 0;
   text-align: center;
 }
 
@@ -458,6 +470,25 @@
   justify-content: center;
   align-items: center;
   opacity: 0.55;
+}
+
+.invoice-footer__qr {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+.invoice-footer__qr-frame {
+  width: calc(var(--inv-scale) * 65px);
+  height: calc(var(--inv-scale) * 65px);
+  padding: calc(var(--inv-scale) * 4px);
+  border-radius: var(--inv-radius-sm);
+  background: #ffffff;
+  border: 1px dashed var(--inv-border-strong);
+  box-shadow: 0 0 0 1px var(--inv-accent-soft);
+}
+
+.invoice-doc--accent-borders .invoice-footer__qr-frame {
+  border-color: var(--inv-border-accent, var(--inv-border-strong));
 }
 
 .invoice-footer__brand a {

@@ -161,6 +161,7 @@ export function buildInvoiceFromDraft(
     paymentMethod: v.paymentMethod as string | undefined,
     paymentDetails: v.paymentDetails as string | undefined,
     notes: v.notes as string | undefined,
+    showQrCode: v.showQrCode !== false,
     userId: ctx.userId,
     currency: ctx.currency ?? 'MRU',
     summaryLines: calc.summaryLines,
