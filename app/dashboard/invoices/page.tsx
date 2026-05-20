@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Plus, FileText, Search } from 'lucide-react'
+import { getInvoiceType } from '@/types/invoice'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -91,7 +92,10 @@ export default function InvoicesPage() {
                       </div>
                       <div>
                         <p className="font-semibold">{invoice.clientName}</p>
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                          <Badge variant="outline" className="text-[10px] font-medium uppercase">
+                            {t(`invoice.types.${getInvoiceType(invoice)}.label`)}
+                          </Badge>
                           <span dir="ltr">{invoice.invoiceNumber}</span>
                           <span>•</span>
                           <span>{formatDate(invoice.createdAt, language)}</span>

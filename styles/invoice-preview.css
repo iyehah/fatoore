@@ -204,8 +204,16 @@
   height: calc(var(--inv-scale) * 20px);
 }
 
+.invoice-customer__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--inv-scale) * 8px);
+  margin-bottom: 2px;
+}
+
 .invoice-customer__name {
-  margin: 0 0 2px;
+  margin: 0;
   font-size: var(--inv-text-md);
   font-weight: 700;
   color: var(--inv-ink);
@@ -481,6 +489,38 @@
 
 .invoice-doc--accent-borders .invoice-separator {
   border-top-color: var(--inv-border-accent, var(--inv-border-strong));
+}
+
+.invoice-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--inv-scale) * 6px);
+  margin-bottom: calc(var(--inv-scale) * 10px);
+}
+
+.invoice-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: calc(var(--inv-scale) * 2px) calc(var(--inv-scale) * 10px);
+  border-radius: 999px;
+  font-size: calc(var(--inv-scale) * 11px);
+  font-weight: 600;
+  line-height: 1.3;
+  background: var(--inv-accent-soft);
+  color: var(--inv-accent);
+  border: 1px solid var(--inv-badge-border, var(--inv-border-accent, var(--inv-border-strong)));
+}
+
+.invoice-table__caption {
+  font-size: calc(var(--inv-scale) * 12px);
+  font-weight: 600;
+  margin-bottom: calc(var(--inv-scale) * 6px);
+  color: var(--inv-accent, #111);
+}
+
+.invoice-totals__row--muted {
+  color: var(--inv-muted, #71717a);
+  font-size: calc(var(--inv-scale) * 11px);
 }
 
 @media print {

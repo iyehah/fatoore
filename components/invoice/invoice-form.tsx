@@ -2,16 +2,15 @@
 
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { format, isValid, parseISO } from 'date-fns'
-import { Plus, Building2, AlertCircle, Check, CalendarIcon } from 'lucide-react'
+import { Plus, AlertCircle, CalendarIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
+import { BusinessProfileSelector } from '@/components/invoice-engine/business-profile-selector'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Calendar } from '@/components/ui/calendar'
 import { InvoiceItemRow } from './invoice-item-row'
@@ -127,76 +126,12 @@ export function InvoiceForm({
           </AlertDescription>
         </Alert>
       ) : (
-        <Card className="border-primary/15 bg-linear-to-br from-primary/4 to-transparent shadow-sm">
-          <CardHeader>
-                  <CardTitle className="text-base">{t('invoice.selectBusiness')}</CardTitle>
-                  <CardDescription >
-                    {t('invoice.selectBusinessHint')}
-                  </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" role="listbox" aria-label={t('invoice.selectBusiness')}>
-              {businessProfiles.map((p) => {
-                const selected = selectedProfileId === p.id
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    role="option"
-                    aria-selected={selected}
-                    onClick={() => onSelectProfileId(p.id)}
-                    className={cn(
-                      'relative flex w-full gap-4 rounded-xl border-2 p-4 text-start transition-all',
-                      selected
-                        ? 'border-primary bg-primary/[0.07] shadow-sm ring-1 ring-primary/25'
-                        : 'border-border/80 bg-card hover:border-primary/35 hover:bg-muted/30',
-                    )}
-                  >
-                    {selected && (
-                      <span className="absolute inset-e-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                        <Check className="h-4 w-4" strokeWidth={2.5} />
-                      </span>
-                    )}
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/70 bg-white shadow-inner">
-                      {p.logo ? (
-                        <Image
-                          src={p.logo}
-                          alt=""
-                          width={56}
-                          height={56}
-                          unoptimized
-                          className="h-14 w-14 object-contain"
-                          draggable={false}
-                        />
-                      ) : (
-                        <span className="text-xl font-bold text-muted-foreground">
-                          {(p.storeName || '?').charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1 pe-10">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="truncate font-semibold leading-tight">{p.storeName || t('profile.storeName')}</p>
-                        {defaultBusinessProfileId === p.id ? (
-                          <Badge variant="secondary" className="text-[10px] font-medium uppercase tracking-wide">
-                            {t('profile.defaultBadge')}
-                          </Badge>
-                        ) : null}
-                      </div>
-                      {p.taxId ? (
-                        <p className="mt-1.5 text-xs text-muted-foreground" >
-                          <span className="font-medium text-foreground/80">{t('profile.taxId')}:</span> {p.taxId}
-                        </p>
-                      ) : (
-                        <p className="mt-1.5 text-xs text-muted-foreground/80">{t('invoice.noTaxIdOnProfile')}</p>
-                      )}
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        <BusinessProfileSelector
+          profiles={businessProfiles}
+          value={selectedProfileId}
+          onChange={onSelectProfileId}
+          defaultProfileId={defaultBusinessProfileId}
+        />
       )}
 
       <Card>
@@ -263,11 +198,7 @@ export function InvoiceForm({
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader>
-            <CardTitle>{t('invoice.paymentMethod')}</CardTitle>
-            <CardDescription>{t('invoice.paymentMethodHint')}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-6">
             <PaymentMethodSelect value={paymentMethod} onChange={setPaymentMethod} />
 
             <div className="space-y-2">

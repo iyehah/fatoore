@@ -81,6 +81,23 @@ Accent applies to:
 - **UI font** — Selected in the app settings menu; applies to the invoice preview (same stack as the rest of the app, with Arabic fallback).  
 - **Languages** — Arabic, English, French (and more locales); full **RTL / LTR** layout with logical alignment.  
 
+### Dynamic invoice engine
+
+New invoices use a **plugin-based engine** under [`lib/invoice-engine/`](lib/invoice-engine/):
+
+| Type | Use case |
+|------|----------|
+| **Sales** | Line items, tax, discount, shipping (same math as before) |
+| **Subscription** | Plan, billing cycle, renewal |
+| **Service** | Fixed, hourly, or milestone pricing |
+| **Booking** | Appointment, deposit, balance, status |
+| **Installment** | Equal or custom payment schedule |
+
+- **Schema-driven forms** — [`components/invoice-engine/`](components/invoice-engine/) renders fields from each plugin; no hardcoded sales-only form on `/dashboard/invoices/new`.
+- **Live preview** — Split layout: form + [`InvoicePreview`](components/invoice/invoice-preview.tsx) (shell + type-specific body via [`invoice-preview-router`](components/invoice/preview/invoice-preview-router.tsx)).
+- **Storage** — Discriminated `Invoice` with `invoiceType` + `typeData`; legacy invoices without `invoiceType` load as **sales** ([`lib/local-invoices.ts`](lib/local-invoices.ts)).
+- **API-ready** — `buildInvoiceFromDraft()` / `buildPreviewInvoiceFromDraft()` return a full `Partial<Invoice>` suitable for server-side render + existing DOM capture (PDF/PNG) without rewriting the export pipeline.
+
 ## Development
 
 ```bash

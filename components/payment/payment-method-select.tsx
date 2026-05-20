@@ -1,17 +1,19 @@
 'use client'
 
 import Image from 'next/image'
-import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/hooks/use-language'
 import paymentMethodsConfig from '@/config/payment-methods.json'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 
 interface PaymentMethodSelectProps {
   value?: string
   onChange: (value: string) => void
+  /** When false, only the pill row is rendered (parent supplies label). */
+  showLabel?: boolean
 }
 
-export function PaymentMethodSelect({ value, onChange }: PaymentMethodSelectProps) {
+export function PaymentMethodSelect({ value, onChange, showLabel = true }: PaymentMethodSelectProps) {
   const { language, t } = useLanguage()
 
   const methods = paymentMethodsConfig.methods.filter((m) => m.isEnabled)
@@ -28,66 +30,79 @@ export function PaymentMethodSelect({ value, onChange }: PaymentMethodSelectProp
     return method.instructions
   }
 
-  return (
-    <div
-      className="grid grid-cols-1 gap-3 sm:grid-cols-2"
-      role="radiogroup"
-      aria-label={t('invoice.paymentMethod')}
-    >
-      {methods.map((method) => {
-        const selected = value === method.id
-        return (
-          <button
-            key={method.id}
-            type="button"
-            role="radio"
-            aria-checked={selected}
-            onClick={() => onChange(method.id)}
-            className={cn(
-              'relative flex w-full flex-col gap-3 rounded-xl border-2 p-4 text-start transition-all sm:flex-row sm:items-center',
-              selected
-                ? 'border-primary bg-primary/6 shadow-sm ring-1 ring-primary/20'
-                : 'border-border/80 bg-card hover:border-primary/35 hover:bg-muted/40',
-            )}
-          >
-            {selected && (
-              <span className="absolute inset-e-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
-                <Check className="h-3.5 w-3.5" strokeWidth={3} />
-              </span>
-            )}
-            <div
+  const pills = (
+    <ScrollArea className="w-full">
+      <div
+        className="flex w-max gap-1.5 px-1 pb-3 pt-1.5"
+        role="radiogroup"
+        aria-label={t('invoice.paymentMethod')}
+      >
+        {methods.map((method) => {
+          const selected = value === method.id
+          return (
+            <button
+              key={method.id}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              title={getHint(method)}
+              onClick={() => onChange(method.id)}
               className={cn(
-                'flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/60 bg-white shadow-inner',
+                'inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors',
+                selected
+                  ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                  : 'border-border/80 bg-muted/40 text-foreground hover:border-primary/40 hover:bg-muted',
               )}
-              style={
-                method.color
-                  ? { backgroundColor: `${method.color}18`, borderColor: `${method.color}35` }
-                  : undefined
-              }
             >
-              {method.logo ? (
-                <Image
-                  src={method.logo}
-                  alt=""
-                  width={36}
-                  height={36}
-                  unoptimized
-                  className="h-9 w-9 object-contain"
-                  draggable={false}
-                />
-              ) : (
-                <span className="text-lg font-bold" style={{ color: method.color }}>
-                  {method.name.charAt(0)}
-                </span>
-              )}
-            </div>
-            <div className="min-w-0 flex-1 pe-8 sm:pe-6">
-              <p className="font-semibold leading-tight">{getMethodName(method)}</p>
-              <p className="mt-1 text-xs leading-snug text-muted-foreground">{getHint(method)}</p>
-            </div>
-          </button>
-        )
-      })}
+              <span
+                className={cn(
+                  'flex h-5 w-5 shrink-0 items-center justify-center overflow-hidden rounded-full border',
+                  selected
+                    ? 'border-primary-foreground/30 bg-primary-foreground/15'
+                    : 'border-border/60 bg-white',
+                )}
+                style={
+                  !selected && method.color
+                    ? { backgroundColor: `${method.color}18`, borderColor: `${method.color}35` }
+                    : undefined
+                }
+              >
+                {method.logo ? (
+                  <Image
+                    src={method.logo}
+                    alt=""
+                    width={20}
+                    height={20}
+                    unoptimized
+                    className="h-4 w-4 object-contain"
+                    draggable={false}
+                  />
+                ) : (
+                  <span
+                    className="text-[10px] font-bold leading-none"
+                    style={method.color ? { color: method.color } : undefined}
+                  >
+                    {method.name.charAt(0)}
+                  </span>
+                )}
+              </span>
+              <span className="max-w-[9rem] truncate">{getMethodName(method)}</span>
+            </button>
+          )
+        })}
+      </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
+  )
+
+  if (!showLabel) return pills
+
+  return (
+    <div className="space-y-1.5">
+      <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {t('invoice.paymentMethod')}
+      </span>
+      {pills}
     </div>
   )
 }

@@ -116,6 +116,7 @@ export function buildInvoiceAccentCssVars(state: InvoiceAccentState): {
     '--inv-accent-tint': isBlack ? '#e8edf3' : mixWithWhite(accent, 0.08),
     '--inv-accent-on': '#ffffff',
     '--inv-accent-icon': isBlack ? '#64748b' : accent,
+    '--inv-badge-border': mixAccentBorder(accent),
   }
 
   if (state.applyToBorders && !isBlack) {
