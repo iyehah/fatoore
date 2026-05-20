@@ -26,10 +26,25 @@ const InvoiceTemplateSizeContext = createContext<InvoiceTemplateSizeContextValue
 
 const DEFAULT: InvoiceTemplateSize = 'medium'
 
-export function InvoiceTemplateSizeProvider({ children }: { children: ReactNode }) {
-  const [templateSize, setTemplateSizeState] = useState<InvoiceTemplateSize>(DEFAULT)
+export function InvoiceTemplateSizeProvider({
+  children,
+  initialSize,
+  persist = true,
+}: {
+  children: ReactNode
+  initialSize?: InvoiceTemplateSize
+  persist?: boolean
+}) {
+  const [templateSize, setTemplateSizeState] = useState<InvoiceTemplateSize>(
+    initialSize ?? DEFAULT,
+  )
 
   useEffect(() => {
+    if (initialSize) {
+      setTemplateSizeState(initialSize)
+      return
+    }
+    if (!persist) return
     try {
       const raw = localStorage.getItem(INVOICE_TEMPLATE_SIZE_KEY)
       if (raw && isInvoiceTemplateSize(raw)) {
@@ -38,16 +53,20 @@ export function InvoiceTemplateSizeProvider({ children }: { children: ReactNode 
     } catch {
       /* ignore */
     }
-  }, [])
+  }, [initialSize, persist])
 
-  const setTemplateSize = useCallback((size: InvoiceTemplateSize) => {
-    setTemplateSizeState(size)
-    try {
-      localStorage.setItem(INVOICE_TEMPLATE_SIZE_KEY, size)
-    } catch {
-      /* ignore */
-    }
-  }, [])
+  const setTemplateSize = useCallback(
+    (size: InvoiceTemplateSize) => {
+      setTemplateSizeState(size)
+      if (!persist) return
+      try {
+        localStorage.setItem(INVOICE_TEMPLATE_SIZE_KEY, size)
+      } catch {
+        /* ignore */
+      }
+    },
+    [persist],
+  )
 
   const value = useMemo(
     () => ({ templateSize, setTemplateSize }),

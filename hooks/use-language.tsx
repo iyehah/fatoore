@@ -40,25 +40,45 @@ const STORAGE_KEY = 'rim-invoice-language'
 
 const LanguageContext = createContext<LanguageContextType | null>(null)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<ActiveLanguage>('ar')
+export function LanguageProvider({
+  children,
+  initialLanguage,
+  persist = true,
+  /** When true, dir/lang apply only to a wrapper — not document (invoice preview in API playground). */
+  isolateDocument = false,
+}: {
+  children: ReactNode
+  initialLanguage?: ActiveLanguage
+  /** When false, skips localStorage read/write (API render / playground). */
+  persist?: boolean
+  isolateDocument?: boolean
+}) {
+  const [language, setLanguageState] = useState<ActiveLanguage>(initialLanguage ?? 'ar')
 
   useEffect(() => {
+    if (initialLanguage) {
+      setLanguageState(initialLanguage)
+    }
+    if (initialLanguage || !persist) return
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored && isActiveLanguage(stored)) {
       setLanguageState(stored)
     }
-  }, [])
+  }, [initialLanguage, persist])
 
   useEffect(() => {
+    if (isolateDocument) return
     document.documentElement.dir = directions[language]
     document.documentElement.lang = language
-  }, [language])
+  }, [language, isolateDocument])
 
-  const setLanguage = useCallback((lang: ActiveLanguage) => {
-    setLanguageState(lang)
-    localStorage.setItem(STORAGE_KEY, lang)
-  }, [])
+  const setLanguage = useCallback(
+    (lang: ActiveLanguage) => {
+      setLanguageState(lang)
+      if (persist) localStorage.setItem(STORAGE_KEY, lang)
+    },
+    [persist],
+  )
 
   const t = useCallback(
     (key: string, params?: Record<string, string | number>): string => {
@@ -95,11 +115,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const direction = directions[language]
 
-  return (
+  const inner = (
     <LanguageContext.Provider value={{ language, direction, t, setLanguage }}>
       {children}
     </LanguageContext.Provider>
   )
+
+  if (isolateDocument) {
+    return (
+      <div dir={direction} lang={language} className="min-w-0">
+        {inner}
+      </div>
+    )
+  }
+
+  return inner
 }
 
 export function useLanguage(): LanguageContextType {

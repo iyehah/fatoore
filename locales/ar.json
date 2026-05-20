@@ -320,6 +320,100 @@
     "imageDownloaded": "تم تنزيل الصورة.",
     "downloadFailed": "فشل التنزيل"
   },
+  "api": {
+    "title": "مختبر واجهة الفواتير",
+    "subtitle": "إنشاء ومعاينة واختبار GET /api/invoice للتكامل الخارجي.",
+    "form": {
+      "title": "منشئ الاستعلام",
+      "hint": "التغييرات تحدّث المعاينة والرابط فوراً.",
+      "render": "المخرجات والتنسيق",
+      "options": "خيارات العرض",
+      "typeFields": "حقول نوع الفاتورة",
+      "format": "الصيغة",
+      "lang": "لغة الفاتورة",
+      "size": "حجم القالب",
+      "font": "الخط",
+      "color": "لون التمييز",
+      "colorDefault": "افتراضي",
+      "showLogo": "إظهار الشعار",
+      "autoInvoiceNumber": "رقم فاتورة تلقائي",
+      "invoiceMeta": "تفاصيل الفاتورة",
+      "createdAt": "تاريخ الفاتورة",
+      "pickDate": "اختر التاريخ",
+      "invoiceNumber": "رقم الفاتورة",
+      "invoiceNumberAuto": "يُولَّد من الطلب (ثابت لنفس الرابط)",
+      "currency": "العملة",
+      "clientAddress": "عنوان العميل",
+      "businessAddress": "عنوان النشاط",
+      "milestonesJson": "المراحل (JSON)",
+      "installmentsJson": "الأقساط (JSON)",
+      "business": "النشاط",
+      "businessName": "اسم النشاط",
+      "businessLogo": "رابط الشعار",
+      "businessPhone": "الهاتف",
+      "businessTaxId": "الرقم الضريبي",
+      "customer": "العميل",
+      "clientName": "اسم العميل",
+      "clientPhone": "هاتف العميل",
+      "taxRate": "الضريبة %",
+      "discount": "الخصم",
+      "notes": "ملاحظات",
+      "items": "البنود",
+      "itemsJson": "البنود (JSON)"
+    },
+    "url": {
+      "title": "روابط الطلب",
+      "apiEndpoint": "الواجهة (صورة/PDF)",
+      "renderPage": "صفحة العرض",
+      "openImage": "فتح صورة API",
+      "openPdf": "فتح PDF API"
+    },
+    "preview": {
+      "title": "معاينة مباشرة",
+      "hint": "نفس واجهة الفاتورة في التطبيق."
+    },
+    "examples": {
+      "sales": "مبيعات",
+      "subscription": "اشتراك",
+      "service": "خدمة",
+      "booking": "حجز",
+      "installment": "أقساط"
+    },
+    "docs": {
+      "title": "دليل التكامل",
+      "description": "معاملات الاستعلام لـ GET /api/invoice و /invoice/render. وسّع كل قسم للتفاصيل.",
+      "types": {
+        "title": "أنواع الفواتير",
+        "body": "type=sales أو subscription أو service أو booking أو installment. لكل نوع حقوله (items، planName، bookingDate، installmentCount، إلخ) بالإضافة إلى حقول النشاط والعميل المشتركة."
+      },
+      "formats": {
+        "title": "المخرجات والتنسيق",
+        "body": "format=img (PNG) أو format=pdf. lang لغة واجهة الفاتورة (en, ar, fr). size: s | m | l. font: geist, inter, amiri وغيرها. الافتراضي: type=sales, format=img, lang=en, size=m, color=default, showLogo=true."
+      },
+      "invoiceNumber": {
+        "title": "رقم الفاتورة",
+        "body": "autoInvoiceNumber=true (افتراضي) يولّد رقم INV-YYMMDD-#### ثابتاً من الطلب. autoInvoiceNumber=false يتطلب invoiceNumber=رقمك. createdAt (تاريخ ISO) يحدد تاريخ الفاتورة وجزء التاريخ في الرقم."
+      },
+      "color": {
+        "title": "لون التمييز",
+        "body": "color=default أو preset (blue, green…) أو hex (#2563eb). applyBorders=true اختياري للحدود."
+      },
+      "logo": {
+        "title": "الشعار و QR",
+        "body": "showLogo=false يخفي الشعار. businessLogo برابط https. showQrCode=true (افتراضي) يضيف QR للدفع في التذييل."
+      },
+      "items": {
+        "title": "البنود والجداول",
+        "body": "المبيعات: items كـ JSON أو item0_desc/qty/price. الخدمة: milestones JSON. الأقساط: installments أو وضع العدد."
+      },
+      "shared": {
+        "title": "معاملات مشتركة",
+        "body": "businessName, businessAddress, clientName (مطلوب), clientPhone, taxRate, discount, notes, paymentMethod, dueDate, currency (افتراضي MRU)، وحقول خاصة بالنوع."
+      },
+      "authTitle": "واجهة عامة",
+      "authNote": "لا يلزم مفتاح API حالياً. التحديد والمصادقة مخطط لهما لاحقاً."
+    }
+  },
   "errors": {
     "required": "هذا الحقل مطلوب",
     "invalidEmail": "البريد الإلكتروني غير صالح",

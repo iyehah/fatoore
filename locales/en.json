@@ -362,6 +362,100 @@
     "imageDownloaded": "Image downloaded.",
     "downloadFailed": "Download failed"
   },
+  "api": {
+    "title": "Invoice API Playground",
+    "subtitle": "Build, preview, and test GET /api/invoice for external integrations.",
+    "form": {
+      "title": "Query builder",
+      "hint": "Changes update the live preview and API URL instantly.",
+      "render": "Output & styling",
+      "options": "Display options",
+      "typeFields": "Invoice type fields",
+      "format": "Format",
+      "lang": "Invoice language",
+      "size": "Template size",
+      "font": "Font",
+      "color": "Accent color",
+      "colorDefault": "Default",
+      "showLogo": "Show business logo",
+      "autoInvoiceNumber": "Auto invoice number",
+      "invoiceMeta": "Invoice details",
+      "createdAt": "Invoice date",
+      "pickDate": "Select date",
+      "invoiceNumber": "Invoice number",
+      "invoiceNumberAuto": "Generated from request (stable per URL)",
+      "currency": "Currency",
+      "clientAddress": "Client address",
+      "businessAddress": "Business address",
+      "milestonesJson": "Milestones (JSON)",
+      "installmentsJson": "Installments (JSON)",
+      "business": "Business",
+      "businessName": "Business name",
+      "businessLogo": "Logo URL (https)",
+      "businessPhone": "Phone",
+      "businessTaxId": "Tax ID",
+      "customer": "Customer",
+      "clientName": "Client name",
+      "clientPhone": "Client phone",
+      "taxRate": "Tax %",
+      "discount": "Discount",
+      "notes": "Notes",
+      "items": "Line items",
+      "itemsJson": "Items (JSON array)"
+    },
+    "url": {
+      "title": "Request URLs",
+      "apiEndpoint": "API (image/PDF)",
+      "renderPage": "Render page (HTML preview)",
+      "openImage": "Open image API",
+      "openPdf": "Open PDF API"
+    },
+    "preview": {
+      "title": "Live preview",
+      "hint": "Same UI as saved invoices and PDF export."
+    },
+    "examples": {
+      "sales": "Sales example",
+      "subscription": "Subscription",
+      "service": "Service",
+      "booking": "Booking",
+      "installment": "Installment"
+    },
+    "docs": {
+      "title": "Integration guide",
+      "description": "Query parameters for GET /api/invoice and /invoice/render. Expand each section for details.",
+      "types": {
+        "title": "Invoice types",
+        "body": "type=sales | subscription | service | booking | installment. Each type adds its own fields (items JSON, planName, bookingDate, installmentCount, etc.) on top of shared business and customer parameters."
+      },
+      "formats": {
+        "title": "Output & styling",
+        "body": "format=img (PNG) or format=pdf. lang sets invoice UI language (en, ar, fr). size: s | m | l. font: geist, inter, amiri, and other platform fonts. Defaults: type=sales, format=img, lang=en, size=m, color=default, showLogo=true, showQrCode=true."
+      },
+      "invoiceNumber": {
+        "title": "Invoice number",
+        "body": "autoInvoiceNumber=true (default) generates a stable INV-YYMMDD-#### from the request (same query string → same number). Set autoInvoiceNumber=false and pass invoiceNumber=YOUR-ID for a custom number. createdAt (ISO date) controls the invoice date and the date part of the number."
+      },
+      "color": {
+        "title": "Accent color",
+        "body": "color=default, a preset (blue, green, orange, gray), or hex (#2563eb). Optional applyBorders=true tints dashed borders."
+      },
+      "logo": {
+        "title": "Logo & QR",
+        "body": "showLogo=false hides the header logo even when businessLogo is set (https URLs only). showQrCode=true (default) adds a payment QR in the footer when payment details are present."
+      },
+      "items": {
+        "title": "Line items & schedules",
+        "body": "Sales: items as JSON array or item0_desc / item0_qty / item0_price. Service: milestones JSON. Installment: installments JSON or count mode fields."
+      },
+      "shared": {
+        "title": "Shared parameters",
+        "body": "businessName, businessAddress, businessPhone, businessTaxId, clientName (required), clientPhone, clientAddress, taxRate, discount, notes, paymentMethod, paymentDetails, dueDate, currency (default MRU), and type-specific fields."
+      },
+      "authTitle": "Public endpoint",
+      "authNote": "No API key is required today. Rate limiting and authentication are planned for a future release."
+    }
+  },
   "errors": {
     "required": "This field is required",
     "invalidEmail": "Invalid email",

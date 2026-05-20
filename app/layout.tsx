@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning >
       <body
-        className={`${fontVars} ${notoSansArabic.variable} antialiased bg-background text-foreground`}
+        className={`${fontVars} ${notoSansArabic.variable} antialiased bg-background text-foreground overflow-x-hidden`}
         style={{ fontFamily: resolvedBodyFontFamily('geist') }}
       >
         <Providers>

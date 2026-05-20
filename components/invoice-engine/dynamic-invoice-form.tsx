@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from 'react'
 import { useFieldArray, useForm, useWatch, Controller, type FieldValues } from 'react-hook-form'
-import { format, isValid, parseISO } from 'date-fns'
-import { Plus, Trash2, CalendarIcon } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -17,8 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
+import { DatePickerField } from '@/components/ui/date-picker-field'
 import { PaymentMethodSelect } from '@/components/payment/payment-method-select'
 import { useLanguage } from '@/hooks/use-language'
 import { getPlugin } from '@/lib/invoice-engine/registry'
@@ -234,7 +232,7 @@ function ScalarField({
         />
       )
     case 'date':
-      return <DateField id={id} control={control} language={language} pickLabel={t('invoice.pickDueDate')} />
+      return <DateField id={id} control={control} pickLabel={t('invoice.pickDueDate')} />
     case 'time':
       return <Input id={id} type="time" dir="ltr" {...register(id)} />
     case 'select':
@@ -316,57 +314,24 @@ function ScalarField({
 function DateField({
   id,
   control,
-  language,
   pickLabel,
 }: {
   id: string
   control: ReturnType<typeof useForm>['control']
-  language: string
   pickLabel: string
 }) {
-  const locale =
-    language === 'ar'
-      ? 'ar-SA'
-      : language === 'fr'
-        ? 'fr-FR'
-        : language === 'es'
-          ? 'es-ES'
-          : language === 'pt'
-            ? 'pt-PT'
-            : language === 'de'
-              ? 'de-DE'
-              : 'en-US'
-
   return (
     <Controller
       name={id}
       control={control}
-      render={({ field }) => {
-        const raw = field.value as string
-        const d = raw ? parseISO(raw) : undefined
-        const label =
-          d && isValid(d)
-            ? d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
-            : pickLabel
-
-        return (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button type="button" variant="outline" className="w-full justify-start font-normal">
-                <CalendarIcon className="me-2 h-4 w-4 opacity-60" />
-                {label}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={d && isValid(d) ? d : undefined}
-                onSelect={(day) => field.onChange(day ? format(day, 'yyyy-MM-dd') : '')}
-              />
-            </PopoverContent>
-          </Popover>
-        )
-      }}
+      render={({ field }) => (
+        <DatePickerField
+          id={id}
+          value={field.value as string}
+          pickLabel={pickLabel}
+          onChange={field.onChange}
+        />
+      )}
     />
   )
 }
@@ -516,7 +481,6 @@ function ArrayRow({
               <DateField
                 id={name}
                 control={control}
-                language={language}
                 pickLabel={t('invoice.pickDueDate')}
               />
             ) : sub.type === 'textarea' ? (

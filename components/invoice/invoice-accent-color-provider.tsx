@@ -33,7 +33,7 @@ const InvoiceAccentColorContext = createContext<InvoiceAccentColorContextValue |
   null,
 )
 
-function persist(state: InvoiceAccentState) {
+function persistAccent(state: InvoiceAccentState) {
   try {
     localStorage.setItem(INVOICE_ACCENT_STORAGE_KEY, JSON.stringify(state))
   } catch {
@@ -41,25 +41,43 @@ function persist(state: InvoiceAccentState) {
   }
 }
 
-export function InvoiceAccentColorProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<InvoiceAccentState>(DEFAULT_INVOICE_ACCENT)
+export function InvoiceAccentColorProvider({
+  children,
+  initialState,
+  persist = true,
+}: {
+  children: ReactNode
+  initialState?: InvoiceAccentState
+  persist?: boolean
+}) {
+  const [state, setState] = useState<InvoiceAccentState>(
+    initialState ?? DEFAULT_INVOICE_ACCENT,
+  )
 
   useEffect(() => {
+    if (initialState) {
+      setState(initialState)
+      return
+    }
+    if (!persist) return
     try {
       const raw = localStorage.getItem(INVOICE_ACCENT_STORAGE_KEY)
       setState(parseStoredAccent(raw))
     } catch {
       /* ignore */
     }
-  }, [])
+  }, [initialState, persist])
 
-  const update = useCallback((patch: Partial<InvoiceAccentState>) => {
-    setState((prev) => {
-      const next = { ...prev, ...patch }
-      persist(next)
-      return next
-    })
-  }, [])
+  const update = useCallback(
+    (patch: Partial<InvoiceAccentState>) => {
+      setState((prev) => {
+        const next = { ...prev, ...patch }
+        if (persist) persistAccent(next)
+        return next
+      })
+    },
+    [persist],
+  )
 
   const setPreset = useCallback(
     (preset: InvoiceAccentPreset) => update({ preset }),

@@ -320,6 +320,100 @@
     "imageDownloaded": "Image téléchargée.",
     "downloadFailed": "Échec du téléchargement"
   },
+  "api": {
+    "title": "Playground API factures",
+    "subtitle": "Construire, prévisualiser et tester GET /api/invoice.",
+    "form": {
+      "title": "Constructeur de requête",
+      "hint": "Les changements mettent à jour l'aperçu et l'URL.",
+      "render": "Sortie et style",
+      "options": "Options d'affichage",
+      "typeFields": "Champs du type",
+      "format": "Format",
+      "lang": "Langue facture",
+      "size": "Taille",
+      "font": "Police",
+      "color": "Couleur d'accent",
+      "colorDefault": "Défaut",
+      "showLogo": "Afficher le logo",
+      "autoInvoiceNumber": "Numéro auto",
+      "invoiceMeta": "Détails facture",
+      "createdAt": "Date de facture",
+      "pickDate": "Choisir la date",
+      "invoiceNumber": "Numéro de facture",
+      "invoiceNumberAuto": "Généré depuis la requête (stable par URL)",
+      "currency": "Devise",
+      "clientAddress": "Adresse client",
+      "businessAddress": "Adresse entreprise",
+      "milestonesJson": "Jalons (JSON)",
+      "installmentsJson": "Versements (JSON)",
+      "business": "Entreprise",
+      "businessName": "Nom",
+      "businessLogo": "URL du logo",
+      "businessPhone": "Téléphone",
+      "businessTaxId": "N° fiscal",
+      "customer": "Client",
+      "clientName": "Nom du client",
+      "clientPhone": "Téléphone client",
+      "taxRate": "TVA %",
+      "discount": "Remise",
+      "notes": "Notes",
+      "items": "Lignes",
+      "itemsJson": "Lignes (JSON)"
+    },
+    "url": {
+      "title": "URLs",
+      "apiEndpoint": "API (image/PDF)",
+      "renderPage": "Page de rendu",
+      "openImage": "Ouvrir image API",
+      "openPdf": "Ouvrir PDF API"
+    },
+    "preview": {
+      "title": "Aperçu en direct",
+      "hint": "Même interface que l'application."
+    },
+    "examples": {
+      "sales": "Ventes",
+      "subscription": "Abonnement",
+      "service": "Service",
+      "booking": "Réservation",
+      "installment": "Versements"
+    },
+    "docs": {
+      "title": "Guide d'intégration",
+      "description": "Paramètres de requête pour GET /api/invoice et /invoice/render. Déployez chaque section pour les détails.",
+      "types": {
+        "title": "Types de facture",
+        "body": "type=sales | subscription | service | booking | installment. Chaque type ajoute ses champs (items JSON, planName, bookingDate, etc.) en plus des paramètres entreprise et client."
+      },
+      "formats": {
+        "title": "Sortie et style",
+        "body": "format=img (PNG) ou format=pdf. lang : en, ar, fr. size : s | m | l. font : geist, inter, amiri, etc. Par défaut : type=sales, format=img, lang=en, size=m, color=default, showLogo=true."
+      },
+      "invoiceNumber": {
+        "title": "Numéro de facture",
+        "body": "autoInvoiceNumber=true (défaut) génère un numéro INV-YYMMDD-#### stable. autoInvoiceNumber=false exige invoiceNumber=VOTRE-ID. createdAt (date ISO) fixe la date affichée."
+      },
+      "color": {
+        "title": "Couleur d'accent",
+        "body": "color=default, preset (blue, green…) ou hex (#2563eb). applyBorders=true en option."
+      },
+      "logo": {
+        "title": "Logo et QR",
+        "body": "showLogo=false masque le logo (businessLogo en https). showQrCode=true (défaut) ajoute un QR de paiement en pied de page."
+      },
+      "items": {
+        "title": "Lignes et échéanciers",
+        "body": "Ventes : items en JSON ou item0_desc/qty/price. Service : milestones JSON. Acomptes : installments ou mode count."
+      },
+      "shared": {
+        "title": "Paramètres communs",
+        "body": "businessName, businessAddress, clientName (requis), clientPhone, taxRate, discount, notes, paymentMethod, dueDate, currency (MRU par défaut), etc."
+      },
+      "authTitle": "Point d'accès public",
+      "authNote": "Aucune clé API pour l'instant. Limitation de débit et authentification sont prévues."
+    }
+  },
   "errors": {
     "required": "Ce champ est requis",
     "invalidEmail": "Email invalide",

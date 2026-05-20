@@ -42,6 +42,14 @@ NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
 - **User profile** in Firestore (`users/{uid}`) is used after sign-in (see `getUserDocument` / `createUserDocument`).
 - **Invoices** and **business profiles** are **not** synced to Firestore in the current codebase; they live in `localStorage` keyed by Firebase `uid`. Clearing site data or using another browser loses that local data unless you add cloud sync later.
 
+## Public Invoice API
+
+Generate invoices via **`GET /api/invoice`** (PNG or PDF) for external integrations. Uses the same invoice engine and UI as the dashboard — no duplicate templates.
+
+- **Documentation:** [api.md](./api.md)  
+- **Playground:** [/developers/invoice-api](http://localhost:3000/developers/invoice-api) (when running locally)  
+- **Requirements:** Playwright Chromium (`pnpm exec playwright install chromium`) and `INVOICE_API_BASE_URL` pointing at your running app for server-side capture.
+
 ## Invoice preview & export
 
 Export is triggered from the invoice preview dialog ([`components/invoice/invoice-pdf.tsx`](components/invoice/invoice-pdf.tsx)). Implementation lives in [`lib/pdf-generator.ts`](lib/pdf-generator.ts) (PNG via `html-to-image`, PDF by embedding that image in `jspdf`).
