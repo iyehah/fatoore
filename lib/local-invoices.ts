@@ -1,7 +1,31 @@
-import type { Invoice } from '@/types/invoice'
+import type { Invoice, InvoiceType, SalesInvoiceData } from '@/types/invoice'
 
 function storageKey(userId: string) {
   return `riminvoice-invoices-${userId}`
+}
+
+function migrateInvoice(raw: Record<string, unknown>): Invoice {
+  const invoice = raw as Invoice & Record<string, unknown>
+
+  if (invoice.invoiceType && invoice.typeData !== undefined) {
+    return invoice as Invoice
+  }
+
+  const items = Array.isArray(invoice.items) ? invoice.items : []
+  const typeData: SalesInvoiceData = {
+    items: items.map((item) => ({
+      description: item.description,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+    })),
+    shipping: typeof invoice.shipping === 'number' ? invoice.shipping : undefined,
+  }
+
+  return {
+    ...invoice,
+    invoiceType: 'sales' satisfies InvoiceType,
+    typeData,
+  } as Invoice
 }
 
 export function loadInvoices(userId: string): Invoice[] {
@@ -9,8 +33,9 @@ export function loadInvoices(userId: string): Invoice[] {
   try {
     const raw = localStorage.getItem(storageKey(userId))
     if (!raw) return []
-    const parsed = JSON.parse(raw) as Invoice[]
-    return Array.isArray(parsed) ? parsed : []
+    const parsed = JSON.parse(raw) as Record<string, unknown>[]
+    if (!Array.isArray(parsed)) return []
+    return parsed.map((row) => migrateInvoice(row))
   } catch {
     return []
   }

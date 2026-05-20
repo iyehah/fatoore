@@ -2,9 +2,9 @@
 
 import { useState, useCallback } from 'react'
 import useSWR, { mutate as globalMutate } from 'swr'
-import type { Invoice, InvoiceFormData, InvoiceItem } from '@/types/invoice'
+import type { Invoice, InvoiceDraft } from '@/types/invoice'
 import { useAuth } from './use-auth'
-import { generateInvoiceNumber, calculateInvoiceTotals } from '@/lib/invoice-utils'
+import { buildInvoiceFromDraft } from '@/lib/invoice-engine/normalize'
 import {
   loadInvoices,
   getInvoiceById,
@@ -66,9 +66,14 @@ export function useInvoiceActions() {
   }, [user?.uid])
 
   const createInvoice = useCallback(
-    async (formData: InvoiceFormData, business: BusinessForInvoice): Promise<string | null> => {
+    async (draft: InvoiceDraft, business: BusinessForInvoice): Promise<string | null> => {
       if (!user) {
         setError('Not authenticated')
+        return null
+      }
+
+      if (!business) {
+        setError('No business profile selected')
         return null
       }
 
@@ -76,40 +81,23 @@ export function useInvoiceActions() {
       setError(null)
 
       try {
-        const items: InvoiceItem[] = formData.items.map((item, index) => ({
-          id: `item-${index}`,
-          description: item.description,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          total: item.quantity * item.unitPrice,
-        }))
-
-        const totals = calculateInvoiceTotals(items, formData.taxRate, formData.discount)
-
         const id = newInvoiceId()
-        const invoice: Invoice = {
-          id,
-          invoiceNumber: generateInvoiceNumber(),
-          createdAt: new Date().toISOString(),
-          dueDate: formData.dueDate,
-          status: 'draft',
-          businessProfileId: business?.id,
-          businessName: business?.storeName || user.displayName || 'My Business',
-          businessLogo: business?.logo,
-          businessPhone: business?.phone,
-          businessAddress: business?.address,
-          businessTaxId: business?.taxId,
-          clientName: formData.clientName,
-          clientPhone: formData.clientPhone,
-          clientAddress: formData.clientAddress,
-          items,
-          ...totals,
-          paymentMethod: formData.paymentMethod,
-          paymentDetails: formData.paymentDetails,
-          notes: formData.notes,
-          userId: user.uid,
-          currency: 'MRU',
-        }
+        const invoice: Invoice = buildInvoiceFromDraft(
+          draft,
+          {
+            userId: user.uid,
+            currency: 'MRU',
+            business: {
+              id: business.id,
+              storeName: business.storeName || user.displayName || 'My Business',
+              logo: business.logo,
+              phone: business.phone,
+              address: business.address,
+              taxId: business.taxId,
+            },
+          },
+          { id },
+        )
 
         addInvoice(user.uid, invoice)
         invalidate()

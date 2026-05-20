@@ -136,6 +136,7 @@
     "paymentDetailsPlaceholder": "Account number, phone, or other payment instructions",
     "pickDueDate": "Select due date",
     "thankYou": "Thank you for your business.",
+    "showQrCode": "Show QR code on invoice",
     "templateSize": "Template size",
     "templateSmall": "Ticket",
     "templateMedium": "Standard",
@@ -147,7 +148,140 @@
     "accentOrange": "Orange",
     "accentGray": "Gray",
     "accentCustom": "Custom color",
-    "applyAccentToBorders": "Apply to borders"
+    "applyAccentToBorders": "Apply to borders",
+    "types": {
+      "sales": {
+        "label": "Sales",
+        "description": "Line items, tax, discount, and shipping"
+      },
+      "subscription": {
+        "label": "Subscription",
+        "description": "Recurring billing with cycle and renewal"
+      },
+      "service": {
+        "label": "Service",
+        "description": "Fixed, hourly, or milestone pricing"
+      },
+      "booking": {
+        "label": "Booking",
+        "description": "Appointments with deposit and balance"
+      },
+      "installment": {
+        "label": "Installment",
+        "description": "Payment plan with scheduled dues"
+      }
+    },
+    "engine": {
+      "selectType": "Invoice type",
+      "selectTypeHint": "Choose the document that fits your sale. You cannot change the type after saving.",
+      "createHint": "Pick a type, fill the form, and watch the live preview update.",
+      "livePreviewHint": "Updates as you type — same layout as PDF export.",
+      "sections": {
+        "customer": "Customer",
+        "customerExtra": "Extra on invoice",
+        "payment": "Payment & notes",
+        "totals": "Tax & discount",
+        "subscription": "Subscription",
+        "service": "Service details",
+        "booking": "Booking",
+        "installment": "Installment plan"
+      },
+      "fields": {
+        "shipping": "Shipping",
+        "planName": "Plan name",
+        "billingCycle": "Billing cycle",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "autoRenew": "Auto-renew",
+        "pricePerCycle": "Price per cycle",
+        "nextPayment": "Next payment: {date}",
+        "nextPaymentDate": "Next payment",
+        "endDateSummary": "End date: {date}",
+        "milestoneRow": "Milestone {n}",
+        "installmentRowLabel": "Installment {n}",
+        "installmentColumn": "Installment",
+        "scheduleStartDate": "First due date",
+        "installmentInterval": "Interval",
+        "serviceDescription": "Service description",
+        "pricingModel": "Pricing model",
+        "fixedAmount": "Fixed amount",
+        "hours": "Hours",
+        "hourlyRate": "Hourly rate",
+        "milestoneTitle": "Milestone",
+        "milestoneAmount": "Amount",
+        "milestones": "Milestones",
+        "installments": "Installments",
+        "bookingDate": "Date",
+        "bookingTime": "Time",
+        "duration": "Duration",
+        "serviceType": "Service type",
+        "deposit": "Deposit",
+        "totalPrice": "Total price",
+        "bookingStatus": "Status",
+        "totalAmount": "Total amount",
+        "scheduleMode": "Schedule mode",
+        "installmentCount": "Number of installments",
+        "interestOrFees": "Interest / fees",
+        "installmentAmount": "Amount",
+        "installmentStatus": "Status",
+        "paidToDate": "Paid to date",
+        "remainingBalance": "Remaining balance",
+        "gender": "Gender",
+        "showCustomInfo": "Add custom field on invoice",
+        "customInfoLabel": "Field label",
+        "customInfoLabelPlaceholder": "e.g. Membership ID",
+        "customInfoValue": "Field value",
+        "customInfoValuePlaceholder": "e.g. 12345",
+        "customInfoStyle": "Display style",
+        "paidAmount": "Amount paid so far",
+        "installmentRow": "Installment",
+        "paidColumn": "Paid",
+        "milestoneColumn": "Milestone",
+        "milestoneName": "Name"
+      },
+      "gender": {
+        "M": "Male",
+        "F": "Female"
+      },
+      "customInfoStyle": {
+        "simple": "Simple text",
+        "badge": "Badge"
+      },
+      "cycles": {
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "pricingModels": {
+        "fixed": "Fixed price",
+        "hourly": "Hourly",
+        "milestone": "Milestones"
+      },
+      "bookingStatus": {
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      },
+      "installmentStatus": {
+        "paid": "Paid",
+        "unpaid": "Unpaid",
+        "partial": "Partial",
+        "late": "Late"
+      },
+      "scheduleModes": {
+        "count": "Equal installments",
+        "custom": "Custom schedule"
+      },
+      "intervalUnits": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year"
+      },
+      "badges": {
+        "autoRenew": "Auto-renew"
+      }
+    }
   },
   "client": {
     "name": "Client Name",
