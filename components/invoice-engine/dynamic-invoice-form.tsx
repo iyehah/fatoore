@@ -212,7 +212,7 @@ function ScalarField({
         <Textarea
           id={id}
           placeholder={placeholder}
-          className={id === 'clientAddress' ? 'min-h-[80px] resize-y' : undefined}
+          className={id === 'clientAddress' ? 'min-h-20 resize-y' : undefined}
           {...register(id)}
         />
       )
@@ -484,7 +484,7 @@ function ArrayRow({
                 pickLabel={t('invoice.pickDueDate')}
               />
             ) : sub.type === 'textarea' ? (
-              <Textarea className="min-h-[72px]" {...register(name)} />
+              <Textarea className="min-h-18" {...register(name)} />
             ) : sub.type === 'number' || sub.type === 'currency' ? (
               <Input
                 type="number"
