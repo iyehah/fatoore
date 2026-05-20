@@ -26,29 +26,49 @@ interface FontPreferenceContextValue {
 
 const FontPreferenceContext = createContext<FontPreferenceContextValue | null>(null)
 
-export function FontProvider({ children }: { children: ReactNode }) {
-  const [fontKey, setFontKeyState] = useState<FontKey>(DEFAULT_FONT_KEY)
+export function FontProvider({
+  children,
+  initialFontKey,
+  persist = true,
+  isolate = false,
+}: {
+  children: ReactNode
+  initialFontKey?: FontKey
+  persist?: boolean
+  /** When true, do not change document.body font (scoped invoice preview). */
+  isolate?: boolean
+}) {
+  const [fontKey, setFontKeyState] = useState<FontKey>(initialFontKey ?? DEFAULT_FONT_KEY)
 
   useEffect(() => {
+    if (initialFontKey) {
+      setFontKeyState(initialFontKey)
+    }
+    if (initialFontKey || !persist) return
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
       const resolved = raw && isFontKey(raw) ? raw : DEFAULT_FONT_KEY
       setFontKeyState(resolved)
-      document.body.style.fontFamily = resolvedBodyFontFamily(resolved)
+      if (!isolate) document.body.style.fontFamily = resolvedBodyFontFamily(resolved)
     } catch {
-      document.body.style.fontFamily = resolvedBodyFontFamily(DEFAULT_FONT_KEY)
+      if (!isolate) document.body.style.fontFamily = resolvedBodyFontFamily(DEFAULT_FONT_KEY)
     }
-  }, [])
+  }, [initialFontKey, persist, isolate])
 
-  const setFontKey = useCallback((key: FontKey) => {
-    setFontKeyState(key)
-    try {
-      localStorage.setItem(STORAGE_KEY, key)
-    } catch {
-      console.warn('Failed to persist font preference')
-    }
-    document.body.style.fontFamily = resolvedBodyFontFamily(key)
-  }, [])
+  const setFontKey = useCallback(
+    (key: FontKey) => {
+      setFontKeyState(key)
+      if (persist) {
+        try {
+          localStorage.setItem(STORAGE_KEY, key)
+        } catch {
+          console.warn('Failed to persist font preference')
+        }
+      }
+      if (!isolate) document.body.style.fontFamily = resolvedBodyFontFamily(key)
+    },
+    [persist, isolate],
+  )
 
   return (
     <FontPreferenceContext.Provider value={{ fontKey, setFontKey }}>

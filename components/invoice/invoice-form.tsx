@@ -2,8 +2,7 @@
 
 import { useState, useCallback } from 'react'
 import Link from 'next/link'
-import { format, isValid, parseISO } from 'date-fns'
-import { Plus, AlertCircle, CalendarIcon } from 'lucide-react'
+import { Plus, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,8 +10,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BusinessProfileSelector } from '@/components/invoice-engine/business-profile-selector'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
+import { DatePickerField } from '@/components/ui/date-picker-field'
 import { InvoiceItemRow } from './invoice-item-row'
 import { PaymentMethodSelect } from '@/components/payment/payment-method-select'
 import { useLanguage } from '@/hooks/use-language'
@@ -33,15 +31,6 @@ interface InvoiceFormProps {
 
 type ItemInput = Omit<InvoiceItem, 'id' | 'total'>
 
-function dueDateLabel(dueDate: string, language: string, pickText: string): string {
-  if (!dueDate) return pickText
-  const d = parseISO(dueDate)
-  if (!isValid(d)) return pickText
-  const locale =
-    language === 'ar' ? 'ar-SA' : language === 'fr' ? 'fr-FR' : language === 'es' ? 'es-ES' : language === 'pt' ? 'pt-PT' : language === 'de' ? 'de-DE' : 'en-US'
-  return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })
-}
-
 export function InvoiceForm({
   onSubmit,
   onPreview,
@@ -51,9 +40,8 @@ export function InvoiceForm({
   onSelectProfileId,
   defaultBusinessProfileId,
 }: InvoiceFormProps) {
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
   const hasBusiness = businessProfiles.length > 0 && !!selectedProfileId
-  const [dueCalendarOpen, setDueCalendarOpen] = useState(false)
 
   const [clientName, setClientName] = useState('')
   const [clientPhone, setClientPhone] = useState('')
@@ -109,8 +97,6 @@ export function InvoiceForm({
   const handlePreview = () => {
     onPreview?.(getFormData())
   }
-
-  const dueSelected = dueDate && isValid(parseISO(dueDate)) ? parseISO(dueDate) : undefined
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -213,29 +199,11 @@ export function InvoiceForm({
 
             <div className="space-y-2">
               <Label>{t('invoice.dueDate')}</Label>
-              <Popover open={dueCalendarOpen} onOpenChange={setDueCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="h-11 w-full justify-start ps-3 text-start font-normal"
-                  >
-                    <CalendarIcon className="me-2 h-4 w-4 opacity-70" />
-                    {dueDateLabel(dueDate, language, t('invoice.pickDueDate'))}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dueSelected}
-                    onSelect={(d) => {
-                      setDueDate(d ? format(d, 'yyyy-MM-dd') : '')
-                      setDueCalendarOpen(false)
-                    }}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <DatePickerField
+                value={dueDate}
+                pickLabel={t('invoice.pickDueDate')}
+                onChange={setDueDate}
+              />
             </div>
 
             <div className="space-y-2">

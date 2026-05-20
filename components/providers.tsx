@@ -4,7 +4,7 @@ import { type ReactNode } from 'react'
 import { FontProvider } from '@/components/font-provider'
 import { AuthProvider } from '@/hooks/use-auth'
 import { LanguageProvider } from '@/hooks/use-language'
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
 
 interface ProvidersProps {
@@ -13,12 +13,7 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider defaultTheme="dark" enableSystem>
       <FontProvider>
         <LanguageProvider>
           <AuthProvider>

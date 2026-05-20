@@ -529,6 +529,17 @@
   margin-bottom: calc(var(--inv-scale) * 10px);
 }
 
+/* Export / API capture — stable layout, no motion */
+.invoice-export-mode,
+.invoice-export-mode * {
+  animation: none !important;
+  transition: none !important;
+}
+
+.invoice-export-mode .invoice-doc--export {
+  box-shadow: none;
+}
+
 .invoice-badge {
   display: inline-flex;
   align-items: center;

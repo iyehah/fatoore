@@ -10,6 +10,7 @@ import {
   type CSSProperties,
 } from 'react'
 import { useAppFontPreference } from '@/components/font-provider'
+import type { FontKey } from '@/lib/fonts/registry'
 import { useInvoiceAccentColor } from '@/hooks/use-invoice-accent-color'
 import { useLanguage } from '@/hooks/use-language'
 import { resolvedBodyFontFamily } from '@/lib/fonts/body-font-family'
@@ -19,6 +20,7 @@ import {
   computeInvoicePreviewMetrics,
   getInvoiceFormat,
 } from '@/lib/invoice-preview-scale'
+import { waitForRenderableAssets } from '@/lib/invoice-export/capture'
 import { cn } from '@/lib/utils'
 import type { Invoice } from '@/types/invoice'
 import { InvoicePreviewShell } from './preview/invoice-preview-shell'
@@ -30,16 +32,24 @@ interface InvoicePreviewProps {
   className?: string
   /** When false, skips ResizeObserver auto-fit (avoids feedback loops in live builder). */
   autoFit?: boolean
+  /** Called when fonts/images loaded and layout is stable (export capture). */
+  onExportReady?: () => void
+  /** Overrides app font when set (API / isolated preview). */
+  fontKey?: FontKey
 }
 
 export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
-  function InvoicePreview({ invoice, className, autoFit = true }, ref) {
+  function InvoicePreview({ invoice, className, autoFit = true, onExportReady, fontKey: fontKeyProp }, ref) {
     const { language, direction } = useLanguage()
-    const { fontKey } = useAppFontPreference()
+    const { fontKey: contextFontKey } = useAppFontPreference()
+    const fontKey = fontKeyProp ?? contextFontKey
     const { templateSize } = useInvoiceTemplateSize()
     const { accentCssVars, accentClassName } = useInvoiceAccentColor()
+    const rootRef = useRef<HTMLDivElement>(null)
     const sheetRef = useRef<HTMLDivElement>(null)
+    const exportReadyMarkedRef = useRef(false)
     const [autoFitScale, setAutoFitScale] = useState(1)
+    const [exportReady, setExportReady] = useState(false)
 
     const format = getInvoiceFormat(templateSize)
     const fontFamily = resolvedBodyFontFamily(fontKey)
@@ -64,7 +74,39 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
 
     useEffect(() => {
       setAutoFitScale(1)
-    }, [templateSize])
+      exportReadyMarkedRef.current = false
+      setExportReady(false)
+    }, [templateSize, invoice, language, fontKey])
+
+    useEffect(() => {
+      if (!onExportReady) return
+      const root = rootRef.current
+      if (!root || !exportReady) return
+      onExportReady()
+    }, [exportReady, onExportReady])
+
+    useEffect(() => {
+      if (!onExportReady || exportReadyMarkedRef.current) return
+      const root = rootRef.current
+      if (!root) return
+
+      let cancelled = false
+      const markReady = async () => {
+        await waitForRenderableAssets(root)
+        await new Promise<void>((r) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => r())),
+        )
+        if (cancelled || exportReadyMarkedRef.current) return
+        exportReadyMarkedRef.current = true
+        setExportReady(true)
+      }
+
+      const t = window.setTimeout(markReady, 500)
+      return () => {
+        cancelled = true
+        window.clearTimeout(t)
+      }
+    }, [onExportReady, invoice, templateSize, language, fontKey])
 
     useLayoutEffect(() => {
       if (!autoFit) {
@@ -103,10 +145,17 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
       fontKey,
     ])
 
+    const setRefs = (node: HTMLDivElement | null) => {
+      rootRef.current = node
+      if (typeof ref === 'function') ref(node)
+      else if (ref) ref.current = node
+    }
+
     return (
       <div
-        ref={ref}
+        ref={setRefs}
         dir={direction}
+        data-export-ready={onExportReady ? (exportReady ? 'true' : 'false') : undefined}
         className={cn(
           'invoice-doc',
           metrics.className,
