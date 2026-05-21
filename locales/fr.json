@@ -382,6 +382,8 @@
     "docs": {
       "title": "Guide d'intégration",
       "description": "Paramètres de requête pour GET /api/invoice et /invoice/render. Déployez chaque section pour les détails.",
+      "fullDocsTitle": "Documentation complète (dépôt)",
+      "fullDocsHint": "Table API, schémas d'architecture et guide de déploiement dans frontend/doc/. Voir aussi le",
       "types": {
         "title": "Types de facture",
         "body": "type=sales | subscription | service | booking | installment. Chaque type ajoute ses champs (items JSON, planName, bookingDate, etc.) en plus des paramètres entreprise et client."

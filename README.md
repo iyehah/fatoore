@@ -8,110 +8,87 @@
 </p>
 </div>
 
-> *Fatoore* is a fast web app for creating and managing invoices with support for Mauritanian context (MRU, local payment methods such as Bankily, Seddad, Masrvi, BimBank). Authentication and user records use **Firebase**; invoices and business branding profiles are stored **in the browser** (`localStorage`) per signed-in user.
+Create and manage professional invoices for sales, subscriptions, services, bookings, and installments through an intuitive dashboard, or generate high-quality PNG/PDF invoices via HTTP API for ERP, CRM, and automation systems. Fully customizable currency, branding, and payment methods.
 
-## Example invoice
+> Fast, polished invoices for your business — in the browser or from your own system.
 
-Premium invoice layout with Arabic RTL, accent styling, line items, tax, discount, and local payment details:
 
-<p align="center">
-  <img src="./public/invoice-INV-260516-2929.png" alt="Example invoice INV-260516-2929 — Standard format, black accent, Arabic" width="560" />
-</p>
 
-*Sample: invoice `INV-260516-2929` — Standard size, default black accent, Arabic UI.*
+
+## How it fits your stack
+
+```mermaid
+flowchart LR
+  You[Your system or browser]
+  App[Fatoore web app]
+  Cap[Capture service]
+
+  You -->|GET /api/invoice| App
+  App -->|private| Cap
+  Cap --> App
+  App --> You
+```
+
+- **You** send invoice data as URL query parameters (or use the UI).
+- The **web app** validates data and renders the invoice layout.
+- A **capture service** (separate deployment) screenshots that layout and returns PNG/PDF.
+
+Full diagrams and setup: **[doc/architecture.md](./doc/architecture.md)**
 
 ## Requirements
 
-- **Node.js** 20+ (or current LTS) and npm  
-- A **Firebase** project with **Authentication** (e.g. Google provider) and **Firestore** enabled
+- **Node.js** 20+
+- **Firebase** project (Authentication + Firestore) for the signed-in web UI
+- **Capture service** for API export (headless Chromium; see [integration guide](./doc/integration-guide.md))
 
-### Environment variables
+### Environment (web app)
 
 ```env
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789
-NEXT_PUBLIC_FIREBASE_APP_ID=1:123:web:abc
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-XXXXXXXXXX
+NEXT_PUBLIC_FIREBASE_API_KEY=…
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=…
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=…
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=…
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=…
+NEXT_PUBLIC_FIREBASE_APP_ID=…
+
+# API export (when using capture service)
+INVOICE_API_BASE_URL=https://your-public-app-url
+RENDER_SERVICE_URL=https://your-capture-service-url
+RENDER_SERVICE_API_KEY=shared-secret-with-capture-service
 ```
 
-## Data model notes
-
-- **User profile** in Firestore (`users/{uid}`) is used after sign-in (see `getUserDocument` / `createUserDocument`).
-- **Invoices** and **business profiles** are **not** synced to Firestore in the current codebase; they live in `localStorage` keyed by Firebase `uid`. Clearing site data or using another browser loses that local data unless you add cloud sync later.
-
-## Public Invoice API
-
-Generate invoices via **`GET /api/invoice`** (PNG or PDF) for external integrations. Uses the same invoice engine and UI as the dashboard — no duplicate templates.
-
-- **Documentation:** [api.md](./api.md)  
-- **Playground:** [/developers/invoice-api](http://localhost:3000/developers/invoice-api) (when running locally)  
-- **Vercel:** proxies capture to the external render service (`RENDER_SERVICE_URL` + `RENDER_SERVICE_API_KEY`). Set `INVOICE_API_BASE_URL` to your production URL.
-- **Local dev:** run `pnpm dev:render` from the monorepo root (see [api.md](./api.md)) alongside `pnpm dev`, with matching API keys in `.env.local`.
-
-## Invoice preview & export
-
-Export is triggered from the invoice preview dialog ([`components/invoice/invoice-pdf.tsx`](components/invoice/invoice-pdf.tsx)). Implementation lives in [`lib/pdf-generator.ts`](lib/pdf-generator.ts) (PNG via `html-to-image`, PDF by embedding that image in `jspdf`).
-
-The on-screen preview matches PDF and image downloads (same DOM capture).
-
-### Template sizes
-
-Choose a format from the toolbar on the invoice detail page or preview dialog. The choice is saved in `localStorage` (`rim-invoice-template-size`).
-
-| Size | Label | Preview width | PDF page |
-|------|--------|---------------|----------|
-| **Small** | Ticket | 500px (receipt strip, auto height) | 5.5 × 8.5 in (140 × 216 mm) |
-| **Medium** | Standard | A5 (148 mm) | A5 portrait |
-| **Large** | Full | A4 (210 mm) | A4 portrait |
-
-Typography and spacing scale per format. Content height grows with line items; long invoices auto-shrink to fit one printed page per format.
-
-### Accent colors
-
-Customize invoice branding from the toolbar (saved in `localStorage` as `rim-invoice-accent-color`):
-
-- **Presets:** Black (default), Blue, Green, Orange, Gray  
-- **Custom:** Native color picker (any hex)  
-- **Apply to borders:** Optional checkbox to tint dashed/solid borders on cards, table, customer icon, payment icon, and business logo placeholder  
-
-Accent applies to:
-
-- Business name and logo placeholder  
-- Table header background and labels  
-- Customer and payment icon circles  
-- Grand total bar  
-- Optional borders when enabled  
-
-### Fonts & languages
-
-- **UI font** — Selected in the app settings menu; applies to the invoice preview (same stack as the rest of the app, with Arabic fallback).  
-- **Languages** — Arabic, English, French (and more locales); full **RTL / LTR** layout with logical alignment.  
-
-### Dynamic invoice engine
-
-New invoices use a **plugin-based engine** under [`lib/invoice-engine/`](lib/invoice-engine/):
-
-| Type | Use case |
-|------|----------|
-| **Sales** | Line items, tax, discount, shipping (same math as before) |
-| **Subscription** | Plan, billing cycle, renewal |
-| **Service** | Fixed, hourly, or milestone pricing |
-| **Booking** | Appointment, deposit, balance, status |
-| **Installment** | Equal or custom payment schedule |
-
-- **Schema-driven forms** — [`components/invoice-engine/`](components/invoice-engine/) renders fields from each plugin; no hardcoded sales-only form on `/dashboard/invoices/new`.
-- **Live preview** — Split layout: form + [`InvoicePreview`](components/invoice/invoice-preview.tsx) (shell + type-specific body via [`invoice-preview-router`](components/invoice/preview/invoice-preview-router.tsx)).
-- **Storage** — Discriminated `Invoice` with `invoiceType` + `typeData`; legacy invoices without `invoiceType` load as **sales** ([`lib/local-invoices.ts`](lib/local-invoices.ts)).
-- **API-ready** — `buildInvoiceFromDraft()` / `buildPreviewInvoiceFromDraft()` return a full `Partial<Invoice>` suitable for server-side render + existing DOM capture (PDF/PNG) without rewriting the export pipeline.
-
-## Development
+## Quick start
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000), sign in, create a business profile, then create an invoice and use **Preview** to try sizes, colors, PDF, and PNG export.
+Open [http://localhost:3000](http://localhost:3000) — sign in, add a business profile, create an invoice, preview and export.
+
+**API playground:** [/developers/invoice-api](http://localhost:3000/developers/invoice-api)
+
+## Documentation
+
+| Doc | Description |
+|-----|-------------|
+| [doc/README.md](./doc/README.md) | Documentation index |
+| [doc/api-reference.md](./doc/api-reference.md) | Endpoints + **full query parameter table** |
+| [doc/branding-and-layout.md](./doc/branding-and-layout.md) | Logo, labels, fonts, colors, sizes |
+| [doc/architecture.md](./doc/architecture.md) | System communication (diagrams) |
+| [doc/integration-guide.md](./doc/integration-guide.md) | Production setup & best practices |
+
+## Logo & labels (short)
+
+| Concern | API / UI |
+|---------|----------|
+| Logo | `businessLogo` URL + `showLogo=true` |
+| Label language | `lang=en` \| `ar` \| `fr` |
+| Brand color | `color=default` \| preset \| `#hex`, optional `applyBorders=true` |
+| Layout size | `size=small` \| `medium` \| `large` (aliases `s`, `m`, `l`, …) |
+
+Details: [doc/branding-and-layout.md](./doc/branding-and-layout.md)
+
+## License
+
+See repository license file.
