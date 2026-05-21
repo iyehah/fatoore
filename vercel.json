@@ -1,7 +1,6 @@
 {
   "functions": {
     "app/api/invoice/route": {
-      "memory": 1024,
       "maxDuration": 60
     }
   }

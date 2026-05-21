@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import chromiumPkg from '@sparticuz/chromium'
 import { chromium as playwrightChromium, type Browser } from 'playwright-core'
 import { getInvoiceFormat } from '@/lib/invoice-preview-scale'
@@ -11,12 +13,20 @@ function isServerlessEnv(): boolean {
 
 let localBrowserPromise: Promise<Browser> | null = null
 
+async function resolveServerlessExecutablePath(): Promise<string> {
+  const binDir = path.join(process.cwd(), 'node_modules', '@sparticuz', 'chromium', 'bin')
+  if (fs.existsSync(binDir)) {
+    return chromiumPkg.executablePath(binDir)
+  }
+  return chromiumPkg.executablePath()
+}
+
 async function launchBrowser(): Promise<Browser> {
   if (isServerlessEnv()) {
     chromiumPkg.setGraphicsMode = false
     return playwrightChromium.launch({
       args: chromiumPkg.args,
-      executablePath: await chromiumPkg.executablePath(),
+      executablePath: await resolveServerlessExecutablePath(),
       headless: chromiumPkg.headless,
     })
   }

@@ -212,7 +212,7 @@ Add `debug=true` for `renderUrl` and setup hints.
 
 ## Vercel deployment
 
-The API uses **serverless Chromium** (`@sparticuz/chromium` + `playwright-core`), not the full `playwright` package or `playwright install`.
+The API uses **serverless Chromium** (`@sparticuz/chromium` + `playwright-core`), not the full `playwright` package or `playwright install`. The repo uses **pnpm with `node-linker=hoisted`** (see [`.npmrc`](.npmrc)) so Vercel serverless bundles do not include broken pnpm symlinks.
 
 1. Set in Vercel → Environment Variables:
 
