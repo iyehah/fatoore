@@ -156,7 +156,7 @@ Supported UI languages: `en`, `ar`, `fr` (RTL for `ar`).
 ### Sales (PNG)
 
 ```
-GET /api/invoice?type=sales&format=img&clientName=Ahmed&businessName=My+Shop&items=[{"description":"Item","quantity":1,"unitPrice":1500}]
+GET /api/invoice?type=sales&format=img&clientName=Iyehah+Hacen&businessName=My+Shop&items=[{"description":"Item","quantity":1,"unitPrice":1500}]
 ```
 
 ### Subscription (PDF, blue accent)
@@ -168,7 +168,7 @@ GET /api/invoice?type=subscription&format=pdf&color=blue&clientName=Client&busin
 ### Arabic RTL
 
 ```
-GET /api/invoice?lang=ar&clientName=محمد&businessName=متجر&items=[{"description":"منتج","quantity":2,"unitPrice":500}]
+GET /api/invoice?lang=ar&clientName=إيهاه+الحسن&businessName=متجر&items=[{"description":"منتج","quantity":2,"unitPrice":500}]
 ```
 
 ---
@@ -181,7 +181,7 @@ GET /api/invoice?lang=ar&clientName=محمد&businessName=متجر&items=[{"desc
 { "error": "Validation failed", "details": ["clientName is required"] }
 ```
 
-**500** — Playwright capture failed (dev server must be running)
+**500** — Playwright capture failed (render URL unreachable or Chromium launch failed)
 
 ```json
 { "error": "Invoice capture failed", "details": ["…"] }
@@ -194,10 +194,10 @@ Add `debug=true` for `renderUrl` and setup hints.
 ## Local development
 
 1. Start the app: `pnpm dev`
-2. Install Chromium for Playwright:
+2. Install Chromium for local `playwright-core` (not needed on Vercel):
 
    ```bash
-   pnpm exec playwright install chromium
+   pnpm playwright:install
    ```
 
 3. Optional env:
@@ -207,6 +207,24 @@ Add `debug=true` for `renderUrl` and setup hints.
    ```
 
 4. Open the [playground](/developers/invoice-api) or call the API directly.
+
+---
+
+## Vercel deployment
+
+The API uses **serverless Chromium** (`@sparticuz/chromium` + `playwright-core`), not the full `playwright` package or `playwright install`.
+
+1. Set in Vercel → Environment Variables:
+
+   ```env
+   INVOICE_API_BASE_URL=https://your-production-domain
+   ```
+
+2. [`vercel.json`](vercel.json) configures `app/api/invoice/route` with **1024 MB** memory and **60s** max duration (60s requires Pro on Vercel).
+
+3. Deploy, then verify `/invoice/render?...` in a browser and `GET /api/invoice?format=img&...`.
+
+4. First cold start may take 10–30s; use `debug=true` on failure to see `renderUrl` and hints.
 
 ---
 
