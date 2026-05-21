@@ -1,21 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildInvoiceFromQuery } from '@/lib/api/build-invoice-from-query'
-import { captureInvoiceWithPlaywright } from '@/lib/api/capture-invoice-playwright'
 import { cacheKeyForQuery, getCachedExport, setCachedExport } from '@/lib/api/invoice-cache'
 import { parseInvoiceQuery } from '@/lib/api/invoice-query/parse-query'
+import { captureViaRenderService } from '@/lib/api/render-service-client'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
-
-function isServerlessHint(): boolean {
-  return Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME)
-}
 
 function baseUrl(): string {
   return (
     process.env.INVOICE_API_BASE_URL ??
     process.env.NEXT_PUBLIC_APP_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://127.0.0.1:3000')
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
   )
 }
 
@@ -59,8 +55,8 @@ export async function GET(request: NextRequest) {
   const renderUrl = `${baseUrl().replace(/\/$/, '')}/invoice/render?${queryString}`
 
   try {
-    const result = await captureInvoiceWithPlaywright({
-      renderUrl,
+    const result = await captureViaRenderService({
+      url: renderUrl,
       format: parsed.request.render.format,
       templateSize: parsed.request.render.size,
     })
@@ -89,9 +85,7 @@ export async function GET(request: NextRequest) {
           error: 'Invoice capture failed',
           details: [message],
           renderUrl,
-          hint: isServerlessHint()
-            ? 'Set INVOICE_API_BASE_URL to your production HTTPS URL. Vercel uses @sparticuz/chromium (no playwright install). Ensure /invoice/render works in a browser.'
-            : 'Ensure the dev server is running. Local capture: pnpm playwright:install (playwright-core chromium). Set INVOICE_API_BASE_URL if needed.',
+          hint: 'Ensure INVOICE_API_BASE_URL points to the live frontend and RENDER_SERVICE_URL + RENDER_SERVICE_API_KEY connect to the Render Playwright service.',
         },
         { status: 500 },
       )

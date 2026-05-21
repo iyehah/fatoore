@@ -181,7 +181,7 @@ GET /api/invoice?lang=ar&clientName=إيهاه+الحسن&businessName=متجر&
 { "error": "Validation failed", "details": ["clientName is required"] }
 ```
 
-**500** — Playwright capture failed (render URL unreachable or Chromium launch failed)
+**500** — Capture failed (render service unreachable, timeout, or invoice page error)
 
 ```json
 { "error": "Invoice capture failed", "details": ["…"] }
@@ -191,40 +191,64 @@ Add `debug=true` for `renderUrl` and setup hints.
 
 ---
 
+## Architecture
+
+```
+Client → Vercel GET /api/invoice → Render service POST /render → Playwright opens /invoice/render → PNG/PDF
+```
+
+Playwright runs on the **external render service** ([`backend/`](../backend/)), not on Vercel. The invoice UI at `/invoice/render` is unchanged.
+
+---
+
 ## Local development
 
-1. Start the app: `pnpm dev`
-2. Install Chromium for local `playwright-core` (not needed on Vercel):
-
-   ```bash
-   pnpm playwright:install
-   ```
-
-3. Optional env:
+1. Install deps: `pnpm install` from **repo root**, or `npm install` in each of `frontend/` and `backend/`.
+2. Terminal 1 — `cd frontend` → `npm run dev` → http://127.0.0.1:3000
+3. Terminal 2 — `cd backend` → `npm run dev` → http://127.0.0.1:3001 (do **not** run `pnpm dev:render` from inside `backend/`; that script is only on the repo root)
 
    ```env
+   # frontend/.env.local
    INVOICE_API_BASE_URL=http://127.0.0.1:3000
+   RENDER_SERVICE_URL=http://127.0.0.1:3001
+   RENDER_SERVICE_API_KEY=your-shared-secret
+   ```
+
+   ```env
+   # backend/.env
+   RENDER_SERVICE_API_KEY=your-shared-secret
    ```
 
 4. Open the [playground](/developers/invoice-api) or call the API directly.
 
 ---
 
-## Vercel deployment
+## Deployment
 
-The API uses **serverless Chromium** (`@sparticuz/chromium@123.0.0` + `playwright-core@1.49.1`), not the full `playwright` package or `playwright install`. The repo uses **pnpm with `node-linker=hoisted`** (see [`.npmrc`](.npmrc)) so Vercel serverless bundles do not include broken pnpm symlinks. Next.js traces `@sparticuz/chromium/bin/**` and `playwright-core` (`browsers.json` + `lib/**`) into the `/api/invoice` function bundle.
+### Vercel (frontend)
 
-1. Set in Vercel → Environment Variables:
+Set environment variables:
 
-   ```env
-   INVOICE_API_BASE_URL=https://your-production-domain
-   ```
+```env
+INVOICE_API_BASE_URL=https://your-production-domain
+RENDER_SERVICE_URL=https://your-render-service.onrender.com
+RENDER_SERVICE_API_KEY=<same secret as render service>
+RENDER_SERVICE_TIMEOUT_MS=55000
+```
 
-2. [`vercel.json`](vercel.json) configures `app/api/invoice/route` with **1024 MB** memory and **60s** max duration (60s requires Pro on Vercel).
+[`vercel.json`](vercel.json) sets **60s** max duration for `/api/invoice` (proxy to render service).
 
-3. Deploy, then verify `/invoice/render?...` in a browser and `GET /api/invoice?format=img&...`.
+### Render.com (capture service)
 
-4. First cold start may take 10–30s; use `debug=true` on failure to see `renderUrl` and hints.
+Deploy [`backend/`](../backend/) (Docker or Node). See root [`render.yaml`](../render.yaml).
+
+```env
+RENDER_SERVICE_API_KEY=<shared secret>
+ALLOWED_RENDER_HOST=your-production-domain
+RENDER_TIMEOUT_MS=45000
+```
+
+Verify `/invoice/render?...` in a browser, then `GET /api/invoice?format=img&...`.
 
 ---
 
