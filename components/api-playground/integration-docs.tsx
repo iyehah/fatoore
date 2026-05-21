@@ -1,6 +1,7 @@
 'use client'
 
-import { Info } from 'lucide-react'
+import { BookOpen, Info } from 'lucide-react'
+import Link from 'next/link'
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +22,17 @@ const SECTIONS = [
   'shared',
 ] as const
 
+const DOC_BASE =
+  'https://github.com/iyehah/fatourati/blob/main/frontend/doc'
+
+const DOC_LINKS = [
+  { href: `${DOC_BASE}/README.md`, label: 'Documentation index' },
+  { href: `${DOC_BASE}/api-reference.md`, label: 'API reference (full query table)' },
+  { href: `${DOC_BASE}/architecture.md`, label: 'Architecture & diagrams' },
+  { href: `${DOC_BASE}/branding-and-layout.md`, label: 'Logo, labels, fonts, colors' },
+  { href: `${DOC_BASE}/integration-guide.md`, label: 'Integration guide' },
+] as const
+
 export function IntegrationDocs() {
   const { t } = useLanguage()
 
@@ -35,6 +47,33 @@ export function IntegrationDocs() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="rounded-lg border border-border/60 bg-muted/30 p-3">
+          <div className="mb-2 flex items-center gap-2 text-sm font-medium">
+            <BookOpen className="h-4 w-4" />
+            {t('api.docs.fullDocsTitle')}
+          </div>
+          <ul className="space-y-1.5 text-sm">
+            {DOC_LINKS.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {t('api.docs.fullDocsHint')}{' '}
+            <Link href="/" className="underline underline-offset-2">
+              README
+            </Link>
+          </p>
+        </div>
+
         <Accordion type="single" collapsible defaultValue="types" className="w-full">
           {SECTIONS.map((key) => (
             <AccordionItem key={key} value={key}>

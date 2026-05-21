@@ -424,6 +424,8 @@
     "docs": {
       "title": "Integration guide",
       "description": "Query parameters for GET /api/invoice and /invoice/render. Expand each section for details.",
+      "fullDocsTitle": "Full documentation (repository)",
+      "fullDocsHint": "Complete API table, architecture diagrams, and deploy guide in frontend/doc/. See also project",
       "types": {
         "title": "Invoice types",
         "body": "type=sales | subscription | service | booking | installment. Each type adds its own fields (items JSON, planName, bookingDate, installmentCount, etc.) on top of shared business and customer parameters."

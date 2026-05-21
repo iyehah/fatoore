@@ -382,6 +382,8 @@
     "docs": {
       "title": "دليل التكامل",
       "description": "معاملات الاستعلام لـ GET /api/invoice و /invoice/render. وسّع كل قسم للتفاصيل.",
+      "fullDocsTitle": "التوثيق الكامل (المستودع)",
+      "fullDocsHint": "جدول API، مخططات البنية، ودليل النشر في frontend/doc/. راجع أيضاً",
       "types": {
         "title": "أنواع الفواتير",
         "body": "type=sales أو subscription أو service أو booking أو installment. لكل نوع حقوله (items، planName، bookingDate، installmentCount، إلخ) بالإضافة إلى حقول النشاط والعميل المشتركة."
