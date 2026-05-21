@@ -1,19 +1,45 @@
-import { chromium, type Browser } from 'playwright'
+import fs from 'node:fs'
+import path from 'node:path'
+import chromiumPkg from '@sparticuz/chromium'
+import { chromium as playwrightChromium, type Browser } from 'playwright-core'
 import { getInvoiceFormat } from '@/lib/invoice-preview-scale'
 import { pngBufferToPdf } from '@/lib/invoice-export/pdf-from-png'
 import type { InvoiceApiFormat } from './invoice-query/types'
 import type { InvoiceTemplateSize } from '@/lib/invoice-preview-scale'
 
-let browserPromise: Promise<Browser> | null = null
+function isServerlessEnv(): boolean {
+  return Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME)
+}
 
-async function getBrowser(): Promise<Browser> {
-  if (!browserPromise) {
-    browserPromise = chromium.launch({
+let localBrowserPromise: Promise<Browser> | null = null
+
+async function resolveServerlessExecutablePath(): Promise<string> {
+  const binDir = path.join(process.cwd(), 'node_modules', '@sparticuz', 'chromium', 'bin')
+  if (fs.existsSync(binDir)) {
+    return chromiumPkg.executablePath(binDir)
+  }
+  return chromiumPkg.executablePath()
+}
+
+async function launchBrowser(): Promise<Browser> {
+  if (isServerlessEnv()) {
+    chromiumPkg.setGraphicsMode = false
+    return playwrightChromium.launch({
+      args: chromiumPkg.args,
+      executablePath: await resolveServerlessExecutablePath(),
+      headless: chromiumPkg.headless,
+    })
+  }
+
+  if (!localBrowserPromise) {
+    const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+    localBrowserPromise = playwrightChromium.launch({
       headless: true,
+      ...(executablePath ? { executablePath } : { channel: 'chromium' }),
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     })
   }
-  return browserPromise
+  return localBrowserPromise
 }
 
 export interface CaptureInvoiceOptions {
@@ -33,7 +59,8 @@ export interface CaptureInvoiceResult {
 export async function captureInvoiceWithPlaywright(
   options: CaptureInvoiceOptions,
 ): Promise<CaptureInvoiceResult> {
-  const browser = await getBrowser()
+  const serverless = isServerlessEnv()
+  const browser = await launchBrowser()
   const context = await browser.newContext({
     viewport: { width: 900, height: 1200 },
     deviceScaleFactor: 2,
@@ -90,5 +117,8 @@ export async function captureInvoiceWithPlaywright(
     }
   } finally {
     await context.close()
+    if (serverless) {
+      await browser.close()
+    }
   }
 }

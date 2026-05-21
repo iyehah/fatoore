@@ -48,7 +48,8 @@ Generate invoices via **`GET /api/invoice`** (PNG or PDF) for external integrati
 
 - **Documentation:** [api.md](./api.md)  
 - **Playground:** [/developers/invoice-api](http://localhost:3000/developers/invoice-api) (when running locally)  
-- **Requirements:** Playwright Chromium (`pnpm exec playwright install chromium`) and `INVOICE_API_BASE_URL` pointing at your running app for server-side capture.
+- **Vercel:** Uses `playwright-core` + `@sparticuz/chromium` (no `playwright install` on deploy). Set `INVOICE_API_BASE_URL` to your production URL (e.g. `https://fatoore.vercel.app`). API route needs ≥1024 MB memory (`vercel.json`).
+- **Local dev:** `pnpm playwright:install` then `INVOICE_API_BASE_URL=http://127.0.0.1:3000` if capturing via the API while `pnpm dev` is running.
 
 ## Invoice preview & export
 

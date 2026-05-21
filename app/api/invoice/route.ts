@@ -7,6 +7,10 @@ import { parseInvoiceQuery } from '@/lib/api/invoice-query/parse-query'
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
+function isServerlessHint(): boolean {
+  return Boolean(process.env.VERCEL) || Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME)
+}
+
 function baseUrl(): string {
   return (
     process.env.INVOICE_API_BASE_URL ??
@@ -85,7 +89,9 @@ export async function GET(request: NextRequest) {
           error: 'Invoice capture failed',
           details: [message],
           renderUrl,
-          hint: 'Ensure the dev server is running and Playwright Chromium is installed (pnpm exec playwright install chromium).',
+          hint: isServerlessHint()
+            ? 'Set INVOICE_API_BASE_URL to your production HTTPS URL. Vercel uses @sparticuz/chromium (no playwright install). Ensure /invoice/render works in a browser.'
+            : 'Ensure the dev server is running. Local capture: pnpm playwright:install (playwright-core chromium). Set INVOICE_API_BASE_URL if needed.',
         },
         { status: 500 },
       )
