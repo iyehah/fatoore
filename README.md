@@ -12,11 +12,27 @@ Create and manage professional invoices for sales, subscriptions, services, book
 
 > Fast, polished invoices for your business — in the browser or from your own system.
 
-<div align="center"  style="display:flex; gap:2px;">
-  <img src="./public/invoice-INV-260516-2929.png" alt="Example invoice INV-260516-2929 — Standard format, black accent, English" width="25%" />
-  <img src="./public/invoice-INV-260521-1172.png" alt="Example invoice INV-260521-1172 — Standard format, black accent, English" width="25%" />
-  <img src="./public/invoice-INV-260521-8269.png" alt="Example invoice INV-260521-8269 — Standard format, black accent, Arabic" width="25%" />
-  <img src="./public/invoice-INV-260521-0244.png" alt="Example invoice INV-260521-0244 — Standard format, black accent, Fransh" width="25%" />
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img src="./public/invoice-INV-260516-2929.png" width="220" /><br/>
+        <sub>Installment • Orange • EN • Medium</sub>
+      </td>
+      <td align="center">
+        <img src="./public/invoice-INV-260521-1172.png" width="220" /><br/>
+        <sub>Subscription • Green • EN • Medium</sub>
+      </td>
+      <td align="center">
+        <img src="./public/invoice-INV-260521-8269.png" width="220" /><br/>
+        <sub>Service • Default • AR • Small</sub>
+      </td>
+      <td align="center">
+        <img src="./public/invoice-INV-260521-0244.png" width="220" /><br/>
+        <sub>Sales • Blue • FR • Small</sub>
+      </td>
+    </tr>
+  </table>
 </div>
 
 
