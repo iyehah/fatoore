@@ -7,9 +7,13 @@ const nextConfig = {
     unoptimized: true,
   },
   serverExternalPackages: ['@sparticuz/chromium', 'playwright-core'],
-  // Trace only real Chromium binaries (not entire package tree — pnpm symlinks break Vercel deploy)
   outputFileTracingIncludes: {
-    '/api/invoice': ['node_modules/@sparticuz/chromium/bin/**'],
+    '/api/invoice': [
+      'node_modules/@sparticuz/chromium/bin/**',
+      'node_modules/playwright-core/browsers.json',
+      'node_modules/playwright-core/package.json',
+      'node_modules/playwright-core/lib/**',
+    ],
   },
 }
 

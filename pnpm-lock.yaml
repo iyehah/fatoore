@@ -93,8 +93,8 @@ importers:
         specifier: 1.2.8
         version: 1.2.8(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@sparticuz/chromium':
-        specifier: ^131.0.1
-        version: 131.0.1
+        specifier: 123.0.0
+        version: 123.0.0
       '@vercel/analytics':
         specifier: 1.6.1
         version: 1.6.1(next@16.2.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -144,8 +144,8 @@ importers:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       playwright-core:
-        specifier: 1.60.0
-        version: 1.60.0
+        specifier: 1.49.1
+        version: 1.49.1
       react:
         specifier: 19.2.4
         version: 19.2.4
@@ -1376,8 +1376,8 @@ packages:
   '@radix-ui/rect@1.1.1':
     resolution: {integrity: sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==}
 
-  '@sparticuz/chromium@131.0.1':
-    resolution: {integrity: sha512-VfmHkQmb/Px0zjwdSQwjRMwFw63Qfj+g4Giumz4jiAGEpXHgIZk6xEwlUz6yiUHVDveK2TEgMR2MR6I3okOE7w==}
+  '@sparticuz/chromium@123.0.0':
+    resolution: {integrity: sha512-W1iR3CHiuiyeRix6WK2eKbQLiKkdhiayzDlDNiZAako1pvnSvh+y1UKaZoYIL37eI47zraMA9OkAhkbubp1qUA==}
     engines: {node: '>= 16'}
 
   '@swc/helpers@0.5.15':
@@ -2013,8 +2013,8 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  playwright-core@1.60.0:
-    resolution: {integrity: sha512-9bW6zvX/m0lEbgTKJ6YppOKx8H3VOPBMOCFh2irXFOT4BbHgrx5hPjwJYLT40Lu+4qtD36qKc/Hn56StUW57IA==}
+  playwright-core@1.49.1:
+    resolution: {integrity: sha512-BzmpVcs4kE2CH15rWfzpjzVGhWERJfmnXmniSyKeRZUs9Ws65m+RGIi7mjJK/euCegfn3i7jvqWeWyHe9y3Vgg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -3557,7 +3557,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@sparticuz/chromium@131.0.1':
+  '@sparticuz/chromium@123.0.0':
     dependencies:
       follow-redirects: 1.16.0
       tar-fs: 3.1.2
@@ -4117,7 +4117,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  playwright-core@1.60.0: {}
+  playwright-core@1.49.1: {}
 
   postcss-value-parser@4.2.0: {}
 

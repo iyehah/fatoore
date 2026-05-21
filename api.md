@@ -212,7 +212,7 @@ Add `debug=true` for `renderUrl` and setup hints.
 
 ## Vercel deployment
 
-The API uses **serverless Chromium** (`@sparticuz/chromium` + `playwright-core`), not the full `playwright` package or `playwright install`. The repo uses **pnpm with `node-linker=hoisted`** (see [`.npmrc`](.npmrc)) so Vercel serverless bundles do not include broken pnpm symlinks.
+The API uses **serverless Chromium** (`@sparticuz/chromium@123.0.0` + `playwright-core@1.49.1`), not the full `playwright` package or `playwright install`. The repo uses **pnpm with `node-linker=hoisted`** (see [`.npmrc`](.npmrc)) so Vercel serverless bundles do not include broken pnpm symlinks. Next.js traces `@sparticuz/chromium/bin/**` and `playwright-core` (`browsers.json` + `lib/**`) into the `/api/invoice` function bundle.
 
 1. Set in Vercel → Environment Variables:
 
