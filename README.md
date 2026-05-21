@@ -48,8 +48,8 @@ Generate invoices via **`GET /api/invoice`** (PNG or PDF) for external integrati
 
 - **Documentation:** [api.md](./api.md)  
 - **Playground:** [/developers/invoice-api](http://localhost:3000/developers/invoice-api) (when running locally)  
-- **Vercel:** `playwright-core@1.49.1` + `@sparticuz/chromium@123.0.0` (no `playwright install` on deploy). Set `INVOICE_API_BASE_URL` to your production URL (e.g. `https://fatoore.vercel.app`). `vercel.json` sets 60s max duration for the API route.
-- **Local dev:** `pnpm playwright:install` then `INVOICE_API_BASE_URL=http://127.0.0.1:3000` if capturing via the API while `pnpm dev` is running.
+- **Vercel:** proxies capture to the external render service (`RENDER_SERVICE_URL` + `RENDER_SERVICE_API_KEY`). Set `INVOICE_API_BASE_URL` to your production URL.
+- **Local dev:** run `pnpm dev:render` from the monorepo root (see [api.md](./api.md)) alongside `pnpm dev`, with matching API keys in `.env.local`.
 
 ## Invoice preview & export
 
