@@ -6,7 +6,7 @@ import { useLanguage } from '@/hooks/use-language'
 import { CircleUser, Code2 } from 'lucide-react'
 import Link from 'next/link'
 
-const GITHUB_REPO_URL = 'https://github.com/iyehah/fatourati'
+const GITHUB_REPO_URL = 'https://github.com/iyehah/fatoore'
 const PORTFOLIO_URL = 'https://iyehah.com'
 
 interface RepoDevLinksProps {
